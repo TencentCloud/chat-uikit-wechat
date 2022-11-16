@@ -1,0 +1,17 @@
+{
+  "component": true,
+  "enablePullDownRefresh": true,
+  "usingComponents": {
+    "TextMessage": "../MessageElements/TextMessage/index",
+    "ImageMessage": "../MessageElements/ImageMessage/index",
+    "VideoMessage": "../MessageElements/VideoMessage/index",
+    "AudioMessage": "../MessageElements/AudioMessage/index",
+    "CustomMessage": "../MessageElements/CustomMessage/index",
+    "TipMessage": "../MessageElements/TipMessage/index",
+    "SystemMessage": "../MessageElements/SystemMessage/index",
+    "FaceMessage": "../MessageElements/FaceMessage/index",
+    "FileMessage": "../MessageElements/FileMessage/index",
+    "MergerMessage": "../MessageElements/MergerMessage/index",
+    "RevokeMessage": "../MessageElements/RevokeMessage/index"
+  }
+}
