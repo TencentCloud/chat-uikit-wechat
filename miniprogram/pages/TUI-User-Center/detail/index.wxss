@@ -1,0 +1,96 @@
+.box{
+  width: 100%;
+  padding: 0 20px;
+}
+.list{
+  position: relative;
+  display: flex;
+  align-items: center;
+  background-color:white;
+  width: 100%;
+  height: 56px;
+  font-family: PingFangSC-Regular;
+  font-size: 16px;
+  color: #333333;
+  letter-spacing: 0;
+  line-height: 24px;
+  padding-top: 16px;
+  border-bottom: 1px solid  #EEF0F3;
+}
+.list-URL{
+  padding-left: 12px;
+  padding-right: 12px;
+  align-items: center;
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  margin-right: 5px;
+}
+
+.list-URL image{
+  width: 100%;
+  height: 20px;
+  vertical-align: -2px;
+}
+
+.list-name {
+  display: inline-block;
+  font-family: PingFangSC-Regular;
+  font-size: 16px;
+  color: #333333;
+  letter-spacing: 0;
+  line-height: 24px;
+}
+.listimage{
+  width: 16px;
+  height: 16px;
+  position: absolute;
+  right: 36px;
+}
+.pop-mask {
+  width: 100vw;
+  height: 100vh;
+  position: fixed;
+  z-index: 2;
+  top: 0;
+  right: 0;
+  background: rgba(0,0,0,0.60);
+  display: flex;
+  align-items: center;
+  }
+.pop-box{
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  padding: 20rpx;
+  align-items: center;
+  background: #FFFFFF;
+  border: 1px solid #EEF0F3;
+  z-index: 1;
+
+}
+.text-title{
+right: 100px;
+left: 100px;
+}
+.pop-box-text{
+  display: flex;
+  padding-top: 10px;
+  font-family: PingFangSC-Regular;
+  font-size: 16px;
+  padding-left: 20px;
+  padding-right: 20px;
+}
+.agree{
+  padding-top: 20rpx;
+}
+.pop-agree{
+  padding-top: 20rpx;
+  background: rgba(0,110,255,1);
+  border-radius: 30px;
+  font-size: 16px;
+  color: #FFFFFF;
+  letter-spacing: 0;
+  /* text-align: center; */
+  font-weight: 500;
+}

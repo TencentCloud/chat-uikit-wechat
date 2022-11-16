@@ -1,0 +1,47 @@
+<view class="contain">
+  <!-- 第一部分 -->
+  <view class="view">
+    <view class="view-image-text" bindtap="personal" wx:if="{{showQuit}}">
+      <image class="image-radius"  src='{{config.avatar?config.avatar: "https://sdk-web-1252463788.cos.ap-hongkong.myqcloud.com/im/assets/images/avatar_default.png"}}' />
+     <view class="text-container" >
+        <view  class="name">{{config.nick}}
+          <text class="hasname" wx:if="{{hasname}}">(暂无昵称) </text></view>
+       <view class="ID">userID:{{config.userID}}</view>
+      </view>
+  </view>
+    <view class="view-image-text" wx:else>
+      <image class="image-radius"  src='{{"https://sdk-web-1252463788.cos.ap-hongkong.myqcloud.com/im/assets/images/avatar_default.png"}}' />
+       <view class="text-container" >
+      <view  class="name">
+        <text class="hasname">(暂无昵称) </text>
+      </view>
+       <view class="ID">userID:</view>
+      </view>      
+    </view>
+  </view>
+</view>
+<view class="box">
+<block wx:for="{{listInfo}}" wx:key = "id">
+      <view class="list" data-item="{{item}}" bindtap="handleJump">
+      <view class="list-box">
+         <view class="list-name">
+            <view>{{item.name}}</view>
+            <view wx:if="{{item.id === 2}}">
+              <image class="image" src="{{item.src}}"/>
+            </view>
+         </view>
+         <view class="detail" wx-if="{{item.id === 1}}">
+            <text wx-if="{{open}}">{{item.textForHide}}</text>
+            <text wx:else>{{item.textForShow}}</text>
+         </view>
+        </view>
+         <view wx-if="{{item.id === 1 }}" class="slider-box {{ open && 'slider-open'}}" bindtap="handleOpen">
+            <span class="slider-block"></span>
+         </view>
+    </view>
+</block>
+</view>
+<view class="quit-main">
+<view class="quit-main-text" bindtap="quit" wx:if="{{showQuit}}">退出登录</view>
+<view class="quit-main-text" bindtap="login" wx:else >登录</view>
+</view>

@@ -1,0 +1,4 @@
+<view class="container">
+  <TUIKit config="{{config}}" id="TUIKit">
+  </TUIKit>
+</view>
