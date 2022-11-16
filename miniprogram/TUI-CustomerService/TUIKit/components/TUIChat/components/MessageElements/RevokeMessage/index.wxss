@@ -1,0 +1,18 @@
+
+.revoke{
+  display: flex;
+  justify-content: center;
+  align-items: center
+  }
+.name {
+    border-radius: 8px;
+    font-size: 14px;
+    padding: 6px 0px;
+  }
+.edit{
+    font-family: PingFangSC-Regular;
+    font-size: 14px;
+    color: #006eff;
+    letter-spacing: 0;
+    padding-left: 8px
+}
