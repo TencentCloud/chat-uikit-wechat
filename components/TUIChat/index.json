@@ -1,0 +1,8 @@
+{
+  "component": true,
+  "usingComponents": {
+    "MessageList": "./components/MessageList/index",
+    "MessageInput": "./components/MessageInput/index",
+    "TUIGroup": "../TUIGroup/index"
+  }
+}
