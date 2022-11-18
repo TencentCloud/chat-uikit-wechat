@@ -1,0 +1,9 @@
+{
+  "component": true,
+  "usingComponents": {
+    "Emoji": "../MessageElements/Emoji/index",
+    "CommonWords": "../MessagePrivate/CommonWords/index",
+    "OrderList": "../MessagePrivate/OrderList/index",
+    "ServiceEvaluation": "../MessagePrivate/ServiceEvaluation/index"
+  }
+}
