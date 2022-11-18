@@ -1,0 +1,128 @@
+.container {
+  width: 100vw;
+  height: 100vh;
+  background-color: #F4F5F9;
+}
+.safetytips-box{
+  background: rgba(255, 149, 0, 0.1);
+  padding: 9px;
+}
+.safetytips{
+  font-family: 'PingFang SC';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 24rpx;
+  line-height: 36rpx;
+  text-align: justify;
+  color: #FF8C39;
+}
+.report{
+  float: right;
+  color: #006EFF;
+}
+.tui-navigatorbar{
+  position: absolute;
+  top: 0;
+  width: 750rpx;
+  height: 172rpx;
+  background-color: #006EFF;
+}
+
+.tui-navigatorbar-back{
+  position: absolute;
+  width: 48rpx;
+  height: 48rpx;
+  left: 40rpx;
+  bottom: 20rpx;
+}
+
+.conversation-title {
+  position:absolute;
+  width: 350rpx;
+  height: 88rpx;
+  line-height: 56rpx;
+  font-size: 36rpx;
+  color: #FFFFFF;
+  z-index:100;
+  bottom: 0;
+  left: 200rpx;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.tui-chatroom-navigatorbar{
+  position: relative;
+  /*top: 0;*/
+  flex-shrink: 0;
+  width: 750rpx;
+  height: 176rpx;
+  background-color: #006EFF;
+}
+
+.tui-chatroom-navigatorbar-back{
+    position: absolute;
+    width: 60rpx;
+    height: 60rpx;
+    left: 24rpx;
+    bottom: 15rpx;
+}
+
+.conversation-title {
+  position: absolute;
+  width: 350rpx;
+  height: 88rpx;
+  line-height: 56rpx;
+  font-size: 36rpx;
+  color: #FFFFFF;
+  z-index:100;
+  bottom: 0;
+  left: 200rpx;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.list-box {
+  position: absolute;
+  width: 100vw;
+  height: calc(100vh - 210px);
+  top: 172rpx;
+}
+.list-box-notips {
+  height: calc(100vh - 284px);
+}
+.list-box-group {
+    height: calc(100vh - 248px);
+    top: 254rpx;  
+}
+.list-box-group-notips {
+    height: calc(100vh - 320px) !important;
+    top: 246rpx;
+}
+.input-area {
+  position: absolute;
+  bottom: 0;
+  }
+.message-list {
+  width: 100%;
+  height: 100%;
+}
+
+.message-input {
+  flex-shrink: 0;
+  width: 100%;
+  padding-bottom: var(--padding);
+  background-color: #F1F1F1;
+}
+.calling {
+  position: fixed;
+  z-index: 199;
+  top: 0;
+  bottom: 0;
+  right: 0;
+}
+.group-profile {
+    top: 151rpx;
+    left: 0;
+    z-index: 8;
+    position: absolute;
+}
