@@ -36,7 +36,7 @@ Component({
     userID: '',
     conversation: {},
     memberCount: '',
-    groupMemberprofile: {},
+    groupMemberProfile: [],
     groupMemberAvatar: [],
     groupMemberNick: [],
     hidden: true,
@@ -53,10 +53,26 @@ Component({
     showOwnerName: {},
     showGetMore: false,
     offsetNumber: 0,
+    selectedUserIDList: [],
+    showGroupCall: false,
+    type: 0,
+    Profile: {},
+    callStatus: false,
+    list: [],
+    currentUserID: '',
+    callGroupMemberProfile: [],
   },
   lifetimes: {
     attached() {
+      wx.$TUIKit.getGroupProfile({
+        groupID: this.data.conversation.groupProfile.groupID,
+      }).then((imResponse) => {
+        this.setData({
+          Profile: imResponse,
+        });
+      });
       this.setData({
+        currentUserID: wx.$chat_userID,
         memberCount: this.data.conversation.groupProfile.memberCount,
       });
     },
@@ -68,22 +84,11 @@ Component({
   methods: {
     // 展示更多群成员
     showMore() {
-      wx.$TUIKit.getGroupProfile({
-        groupID: this.data.conversation.groupProfile.groupID,
-      }).then((imResponse) => {
-        this.setData({
-          memberCount: imResponse.data.group.memberCount,
-        });
-        if (imResponse.data.group.memberCount > this.data.getMemberCount) {
-          this.setData({
-            showGetMore: true,
-          });
-        }
-        if (imResponse.data.group.selfInfo.role === 'Owner') {
-          this.setData({
-            showText: '解散群聊',
-          });
-        }
+      const { group } = this.data.Profile.data;
+      const currentMemberCount = group.memberCount;
+      this.setData({
+        showGetMore: currentMemberCount  > this.data.getMemberCount,
+        showText: group.selfInfo.role === 'Owner' ? '解散群聊' : '',
       });
       wx.$TUIKit.getGroupMemberList({
         groupID: this.data.conversation.groupProfile.groupID,
@@ -141,11 +146,44 @@ Component({
     showMoreMember() {
       this.setData({
         popupToggle: true,
+        callStatus: false,
+      });
+    },
+    // 通话展示更多群成员
+    callShowMoreMember(event) {
+      if (this.data.groupMemberProfile.length === 0) {
+        wx.$TUIKit.getGroupMemberList({
+          groupID: this.data.conversation.groupProfile.groupID,
+          count: this.data.getMemberCount,
+          offset: 0,
+        })
+          .then((imResponse) => {
+            const index =  imResponse.data.memberList.findIndex((member) => member.userID === this.data.currentUserID);
+            imResponse.data.memberList.splice(index, 1);
+            this.setData({
+              callGroupMemberProfile: imResponse.data.memberList,
+              showGetMore: this.data.Profile.data.group.memberCount  > this.data.getMemberCount,
+            });
+          });
+      } else {
+        const currentGroupMemberProfile = this.data.groupMemberProfile;
+        const index = currentGroupMemberProfile.findIndex((member)=>  member.userID === this.data.currentUserID);
+        currentGroupMemberProfile.splice(index, 1);
+        this.setData({
+          callGroupMemberProfile: currentGroupMemberProfile,
+        });
+      }
+      this.setData({
+        type: event.detail.type,
+        popupToggle: true,
+        callStatus: true,
       });
     },
     // 关闭显示弹窗
     close() {
       this.setData({
+        selectedUserIDList: [],
+        showGroupCall: false,
         popupToggle: false,
         addPopupToggle: false,
         quitPopupToggle: false,
@@ -168,7 +206,7 @@ Component({
     dismissGroupConfirm() {
       wx.$TUIKit.dismissGroup(this.data.conversation.groupProfile.groupID)
         .then(() => {
-          this.triggerEvent('showConversationList')
+          this.triggerEvent('showConversationList');
         })
         .catch((imError) => {
           wx.showToast({
@@ -191,7 +229,7 @@ Component({
     quitGroupConfirm() {
       wx.$TUIKit.quitGroup(this.data.conversation.groupProfile.groupID)
         .then(() => {
-          this.triggerEvent('showConversationList')
+          this.triggerEvent('showConversationList');
         })
         .catch((imError) => {
           wx.showToast({
@@ -292,6 +330,33 @@ Component({
             },
           });
         },
+      });
+    },
+    // 获取群通话ID
+    handleGroupCallUserIDList(e) {
+      if (!this.data.callStatus) return;
+      const  { selectedUserIDList } = this.data ;
+      const { userID } = e.currentTarget.dataset.value;
+      const index = selectedUserIDList.indexOf(userID);
+      if (index > -1) {
+        selectedUserIDList.splice(index, 1);
+      } else {
+        selectedUserIDList.push(userID);
+      }
+      this.setData({
+        selectedUserIDList,
+        showGroupCall: selectedUserIDList.length > 0,
+      });
+    },
+    // 父组件传值
+    handleGroupCall() {
+      const { selectedUserIDList, type } = this.data;
+      const  { groupID } = this.data.conversation.groupProfile;
+      this.triggerEvent('groupCall', { selectedUserIDList, type, groupID });
+      this.setData({
+        popupToggle: false,
+        showGroupCall: false,
+        selectedUserIDList: []
       });
     },
   },

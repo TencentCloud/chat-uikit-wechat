@@ -15,6 +15,15 @@ Component({
         });
       },
     },
+    hasCallKit: {
+      type: Boolean,
+      value: false,
+      observer(hasCallKit) {
+        this.setData({
+          hasCallKit,
+        });
+      },
+    },
   },
 
   /**
@@ -48,6 +57,8 @@ Component({
     time: 0,
     focus: false,
     isEmoji: false,
+    fileList: [],
+    hasCallKit: false,
   },
 
   lifetimes: {
@@ -212,7 +223,7 @@ Component({
     },
 
     handleSendPicture() {
-      this.sendImageMessage('camera');
+      this.sendMediaMessage('camera', 'image');
     },
 
     handleSendImage() {
@@ -222,39 +233,64 @@ Component({
         ext2: wx.$chat_reportType,
         ext3: wx.$chat_SDKAppID,
       });
-      this.sendImageMessage('album');
+      this.sendMediaMessage('album', 'image');
     },
 
-    sendImageMessage(type) {
-      const maxSize = 20480000;
-      wx.chooseImage({
+    sendMediaMessage(type, mediaType) {
+      const { fileList } = this.data;
+      wx.chooseMedia({
+        count: 9,
         sourceType: [type],
-        count: 1,
+        mediaType: [mediaType],
         success: (res) => {
-          if (res.tempFiles[0].size > maxSize) {
-            wx.showToast({
-              title: '大于20M图片不支持发送',
-              icon: 'none',
-            });
-            return;
-          }
-          const message = wx.$TUIKit.createImageMessage({
-            to: this.getToAccount(),
-            conversationType: this.data.conversation.type,
-            payload: {
-              file: res,
-            },
-            onProgress: (percent) => {
-              message.percent = percent;
-            },
+          const mediaInfoList = res.tempFiles;
+          mediaInfoList.forEach((mediaInfo) => {
+            fileList.push({ type: res.type, tempFiles: [{ tempFilePath: mediaInfo.tempFilePath }] });
           });
-          this.$sendTIMMessage(message);
+          fileList.forEach((file) => {
+            if (file.type === 'image') {
+              this.handleSendImageMessage(file);
+            }
+            if (file.type === 'video') {
+              this.handleSendVideoMessage(file);
+            }
+          });
         },
       });
     },
 
+    // 发送图片消息
+    handleSendImageMessage(file) {
+      const message = wx.$TUIKit.createImageMessage({
+        to: this.getToAccount(),
+        conversationType: this.data.conversation.type,
+        payload: {
+          file,
+        },
+        onProgress: (percent) => {
+          message.percent = percent;
+        },
+      });
+      this.$sendTIMMessage(message);
+    },
+
+    // 发送视频消息
+    handleSendVideoMessage(file) {
+      const message = wx.$TUIKit.createVideoMessage({
+        to: this.getToAccount(),
+        conversationType: this.data.conversation.type,
+        payload: {
+          file,
+        },
+        onProgress: (percent) => {
+          message.percent = percent;
+        },
+      });
+      this.$sendTIMMessage(message);
+    },
+
     handleShootVideo() {
-      this.sendVideoMessage('camera');
+      this.sendMediaMessage('camera', 'video');
     },
 
     handleSendVideo() {
@@ -264,30 +300,7 @@ Component({
         ext2: wx.$chat_reportType,
         ext3: wx.$chat_SDKAppID,
       });
-      this.sendVideoMessage('album');
-    },
-
-    sendVideoMessage(type) {
-      wx.chooseVideo({
-        sourceType: [type], // 来源相册或者拍摄
-        maxDuration: 60, // 设置最长时间60s
-        camera: 'back', // 后置摄像头
-        success: (res) => {
-          if (res) {
-            const message = wx.$TUIKit.createVideoMessage({
-              to: this.getToAccount(),
-              conversationType: this.data.conversation.type,
-              payload: {
-                file: res,
-              },
-              onProgress: (percent) => {
-                message.percent = percent;
-              },
-            });
-            this.$sendTIMMessage(message);
-          }
-        },
-      });
+      this.sendMediaMessage('album', 'video');
     },
 
     handleCommonFunctions(e) {
@@ -338,18 +351,71 @@ Component({
           return this.data.conversation.conversationID;
       }
     },
+    async handleCheckAuthorize(e) {
+      const type = e.currentTarget.dataset.value;
+      wx.getSetting({
+        success: async (res) => {
+          const isRecord = res.authSetting['scope.record'];
+          const isCamera = res.authSetting['scope.camera'];
+          if (!isRecord && type === 1) {
+            const title = '麦克风权限授权';
+            const content = '使用语音通话，需要在设置中对麦克风进行授权允许';
+            try {
+              await wx.authorize({ scope: 'scope.record' });
+              this.handleCalling(e);
+            } catch (e) {
+              this.handleShowModal(title, content);
+            }
+            return;
+          }
+          if ((!isRecord || !isCamera) && type === 2) {
+            const title = '麦克风、摄像头权限授权';
+            const content = '使用视频通话，需要在设置中对麦克风、摄像头进行授权允许';
+            try {
+              await wx.authorize({ scope: 'scope.record' });
+              await wx.authorize({ scope: 'scope.camera' });
+              this.handleCalling(e);
+            } catch (e) {
+              this.handleShowModal(title, content);
+            }
+            return;
+          }
+          this.handleCalling(e);
+        },
+      });
+    },
+    handleShowModal(title, content) {
+      wx.showModal({
+        title,
+        content,
+        confirmText: '去设置',
+        success: (res) => {
+          if (res.confirm) {
+            wx.openSetting();
+          }
+        },
+      });
+    },
 
     handleCalling(e) {
-      // todo 目前支持单聊
-      if (this.data.conversation.type === wx.$TUIKitTIM.TYPES.CONV_GROUP) {
-        if (e.currentTarget.dataset.value === 1) {
+      if (!this.data.hasCallKit) {
+        wx.showToast({
+          title: '请先集成 TUICallKit 组件',
+          icon: 'none',
+        });
+        return;
+      }
+      const type = e.currentTarget.dataset.value;
+      const conversationType = this.data.conversation.type;
+      if (conversationType === wx.$TUIKitTIM.TYPES.CONV_GROUP) {
+        if (type === 1) {
           wx.aegis.reportEvent({
             name: 'audioCall',
             ext1: 'audioCall-group',
             ext2: wx.$chat_reportType,
             ext3: wx.$chat_SDKAppID,
           });
-        } else if (e.currentTarget.dataset.value === 2) {
+        } else if (type === 2) {
           wx.aegis.reportEvent({
             name: 'videoCall',
             ext1: 'videoCall-group',
@@ -357,33 +423,34 @@ Component({
             ext3: wx.$chat_SDKAppID,
           });
         }
-        wx.showToast({
-          title: '群聊暂不支持',
-          icon: 'none',
-        });
-        return;
-      }
-      const type = e.currentTarget.dataset.value;
-      const { userID } = this.data.conversation.userProfile;
-      if (type === 1) {
-        wx.aegis.reportEvent({
-          name: 'audioCall',
-          ext1: 'audioCall-1v1',
-          ext2: wx.$chat_reportType,
-          ext3: wx.$chat_SDKAppID,
-        });
-      } else if (type === 2) {
-        wx.aegis.reportEvent({
-          name: 'videoCall',
-          ext1: 'videoCall-1v1',
-          ext2: wx.$chat_reportType,
-          ext3: wx.$chat_SDKAppID,
+        this.triggerEvent('handleCall', {
+          type,
+          conversationType,
         });
       }
-      this.triggerEvent('handleCall', {
-        type,
-        userID,
-      });
+      if (conversationType === wx.$TUIKitTIM.TYPES.CONV_C2C) {
+        const { userID } = this.data.conversation.userProfile;
+        if (type === 1) {
+          wx.aegis.reportEvent({
+            name: 'audioCall',
+            ext1: 'audioCall-1v1',
+            ext2: wx.$chat_reportType,
+            ext3: wx.$chat_SDKAppID,
+          });
+        } else if (type === 2) {
+          wx.aegis.reportEvent({
+            name: 'videoCall',
+            ext1: 'videoCall-1v1',
+            ext2: wx.$chat_reportType,
+            ext3: wx.$chat_SDKAppID,
+          });
+        }
+        this.triggerEvent('handleCall', {
+          conversationType,
+          type,
+          userID,
+        });
+      }
       this.setData({
         displayFlag: '',
       });

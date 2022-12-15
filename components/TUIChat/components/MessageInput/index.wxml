@@ -49,11 +49,11 @@
             <image class="TUI-Extension-icon" src="../../../../static/assets/send-video.svg" />
             <view class="TUI-Extension-slot-name">发送视频</view>
         </view>
-        <view class="TUI-Extension-slot" data-value="{{1}}"   bindtap="handleCalling" >
+        <view class="TUI-Extension-slot" data-value="{{1}}"   bindtap="handleCheckAuthorize" >
             <image class="TUI-Extension-icon" src="../../../../static/assets/audio-calling.svg" />
             <view class="TUI-Extension-slot-name">语音通话</view>
         </view>
-        <view class="TUI-Extension-slot" data-value="{{2}}"   bindtap="handleCalling" >
+        <view class="TUI-Extension-slot" data-value="{{2}}"   bindtap="handleCheckAuthorize" >
             <image class="TUI-Extension-icon" src="../../../../static/assets/video-calling.svg" />
             <view class="TUI-Extension-slot-name">视频通话</view>
         </view>
