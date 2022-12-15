@@ -27,7 +27,6 @@
   line-height: 56rpx;
   font-size: 36rpx;
   color: #FFFFFF;
-  z-index:100;
   bottom: 0;
   left: 200rpx;
   display: flex;

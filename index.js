@@ -18,10 +18,13 @@ Component({
     isShowConversationList: true,
     currentConversationID: '',
     unreadCount: 0,
+    hasCallKit: false,
     config: {
       userID: '',
       userSig: '',
       type: 1,
+      tim: null,
+      SDKAppID: 0,
     },
   },
 
@@ -33,11 +36,26 @@ Component({
       const { config } = this.data;
       config.userID = wx.$chat_userID;
       config.userSig = wx.$chat_userSig;
+      config.tim = wx.$TUIKit;
+      config.SDKAppID = wx.$chat_SDKAppID;
       this.setData({
         config,
       }, () => {
+        wx.aegis.reportEvent({
+          name: 'TUICallKit',
+          ext1: 'TUICallKitInit',
+          ext2: wx.$chat_reportType,
+          ext3: wx.$chat_SDKAppID,
+        });
         this.TUICallKit = this.selectComponent('#TUICallKit');
-        this.TUICallKit.init();
+        if (this.TUICallKit !== null) {
+          this.TUICallKit.init();
+          wx.setStorageSync('_isTIMCallKit', true);
+          wx.$_isTIMCallKit = '_isTIMCallKit';
+          this.setData({
+            hasCallKit: true,
+          });
+        }
       });
       const TUIConversation = this.selectComponent('#TUIConversation');
       TUIConversation.init();
