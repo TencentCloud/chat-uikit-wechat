@@ -16,11 +16,11 @@
   </scroll-view>
   </view>
   <view class="group-profile">
-    <TUIGroup id="TUIGroup" wx:if="{{isShow}}" conversation="{{conversation}}" bind:showConversationList="showConversationList"></TUIGroup>
+    <TUIGroup id="TUIGroup" wx:if="{{isShow}}" conversation="{{conversation}}" bind:groupCall="groupCall" bind:showConversationList="showConversationList"></TUIGroup>
   </view>
   <view class="input-area">
   <view class="message-input" style="{{viewData.style}}" wx:if="{{showChat}}">
-    <MessageInput id="MessageInput" conversation="{{conversation}}" bind:sendMessage="sendMessage" bind:downKeysBoards="downKeysBoards" bind:pullKeysBoards="pullKeysBoards" bind:showMessageErrorImage="showMessageErrorImage" bind:handleCall="handleCall"></MessageInput>
+    <MessageInput id="MessageInput" conversation="{{conversation}}" hasCallKit="{{hasCallKit}}" bind:sendMessage="sendMessage" bind:downKeysBoards="downKeysBoards" bind:pullKeysBoards="pullKeysBoards" bind:showMessageErrorImage="showMessageErrorImage" bind:handleCall="handleCall" ></MessageInput>
   </view>
   </view>
 </view>

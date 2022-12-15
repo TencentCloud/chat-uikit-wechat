@@ -40,6 +40,15 @@ Component({
         });
       },
     },
+    hasCallKit: {
+      type: Boolean,
+      value: false,
+      observer(hasCallKit) {
+        this.setData({
+          hasCallKit,
+        });
+      },
+    },
   },
 
   lifetimes: {
@@ -70,6 +79,7 @@ Component({
       tim: null,
     },
     unreadCount: 0,
+    hasCallKit: false,
     viewData: {
       style: inputStyle,
     },
@@ -131,9 +141,17 @@ Component({
       this.selectComponent('#MessageInput').handleClose();
     },
     handleCall(event) {
-      this.triggerEvent('handleCall', event.detail);
+      if (event.detail.conversationType === wx.$TUIKitTIM.TYPES.CONV_GROUP) {
+        this.selectComponent('#TUIGroup').callShowMoreMember(event);
+      } else {
+        this.triggerEvent('handleCall', event.detail);
+      }
     },
-
+    groupCall(event) {
+      const { selectedUserIDList, type, groupID } = event.detail;
+      const userIDList = selectedUserIDList;
+      this.triggerEvent('handleCall', { userIDList, type, groupID });
+    },
     goBack() {
       this.triggerEvent('showConversationList');
       wx.$TUIKit.setMessageRead({

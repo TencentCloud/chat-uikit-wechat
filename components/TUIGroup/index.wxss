@@ -120,12 +120,11 @@
   z-index: 10;
   top: 0;
   right: 0;
-  background: rgba(0,0,0,0.60);
   display: flex;
   align-items: flex-end;
 }
 .pop-main{
-  max-height: 60%;
+  max-height: 35%;
   width: 100%;
   padding-bottom: 120rpx;
   background: #FFFFFF;
@@ -133,7 +132,6 @@
 }
 .group-member-text{
   display: inline-block;
-  padding-top: 40rpx;
   padding-left: 40rpx;
   opacity: 0.8;
   font-family: PingFangSC-Medium;
@@ -142,7 +140,6 @@
   line-height: 25px;
 }
 .close{
-  padding-left: 460rpx;
   font-family: PingFangSC-Regular;
   font-size: 18px;
   color: #2B8BD5;
@@ -279,9 +276,9 @@ flex: 1;
   flex-wrap: wrap;
 }
  .image-nick-box{
-  width: 108rpx;
+  width: 141rpx;
   height: 140rpx;
-  padding-left: 32rpx;
+  padding-left: 45rpx;
   padding-top: 32rpx;
 }
 .image{
@@ -344,4 +341,33 @@ flex: 1;
   height: 140rpx;
   padding-left: 32rpx;
   padding-top: 32rpx;
+}
+.call-box {
+  display: flex;
+  flex-direction: column;
+}
+.call-image {
+  width: 48px;
+  height: 48px;
+}
+
+.image-nick-box-active {
+  box-sizing: border-box;
+  border: 3px solid #24a528;
+  border-radius: 4px;
+}
+.pop-main-header {
+  display: flex;
+  align-items: center;
+  justify-items: center;
+  padding-top: 40rpx;
+  justify-content: space-between;
+
+}
+.show-group-call{
+  display: flex;
+  padding-right: 40rpx;
+}
+.handlecall{
+  padding-right: 40rpx;
 }
