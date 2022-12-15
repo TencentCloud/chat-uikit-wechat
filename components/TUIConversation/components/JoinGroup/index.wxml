@@ -11,7 +11,7 @@
     </view>
   </view>
   <view class="tui-person-to-invite" wx:if="{{searchGroup.groupID}}" bindtap="handleChoose">
-    <image  class="tui-normal-choose" src="{{searchGroup.isChoose ? '../../../static/assets/single-choice-hover.svg' : '../../../static/assets/single-choice-normal.svg'}}" />
+    <image  class="tui-normal-choose" src="{{searchGroup.isChoose ? '../../../../static/assets/single-choice-hover.svg' : '../../../../static/assets/single-choice-normal.svg'}}" />
     <view class="tui-person-profile">
       <image class="tui-person-profile-avatar" src="{{searchGroup.group.avatar || '../../../../static/assets/gruopavatar.svg' }}" />
       <view>
