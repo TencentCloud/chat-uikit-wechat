@@ -9,6 +9,22 @@ chat-uikit-wechat 中的组件在实现 UI 功能的同时，会调用 IM SDK �
 chat-uikit-wechat 效果如下图所示：
 <img width="1015" src="https://user-images.githubusercontent.com/40623255/202661227-d4227dcc-bada-42a6-a57b-0d0c0abc098b.png"/>
 
+本文介绍如何快速集成腾讯云 Web IM SDK 的 VUE UI 组件库。对于其他平台，请参考文档：
+
+[**chat-uikit-vue**](https://github.com/TencentCloud/chat-uikit-vue)
+
+[**chat-uikit-react**](https://github.com/TencentCloud/chat-uikit-react)
+
+[**chat-uikit-uniapp**](https://github.com/TencentCloud/chat-uikit-uniapp)
+
+[**chat-uikit-ios**](https://github.com/TencentCloud/chat-uikit-ios)
+
+[**chat-uikit-android**](https://github.com/TencentCloud/chat-uikit-android)
+
+[**chat-uikit-flutter**](https://github.com/TencentCloud/chat-uikit-flutter)
+
+
+
 ## 发送您的第一条消息
 
 ### 开发环境要求
