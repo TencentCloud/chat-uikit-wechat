@@ -37,20 +37,30 @@
     <view class="pop-main" >
         <view class="pop-main-header">
         <text class="group-member-text">群成员</text>
-        <text class="close" catchtap="close">关闭</text>
+        <view class="show-group-call">
+            <text class="handlecall" wx:if="{{showGroupCall}}" bindtap="handleGroupCall">发起通话</text>
+            <text class="close" catchtap="close">关闭</text>
+        </view>
         </view>
     <view class="image-list" >
-    <view class="image-nick-box" wx:for="{{groupMemberProfile}}" wx:key="id" data-value="{{item}}" bindtap="handleJumpPage">
-        <image class="image"  src='{{item.avatar|| "https://sdk-web-1252463788.cos.ap-hongkong.myqcloud.com/component/TUIKit/assets/avatar_21.png"}}' />
-        <view class="groupowner-box">
-        <text class="groupownername-bootom"  wx:if="{{item.role==='Owner'}}">(群主)</text>
-        <text class="groupmembername" >{{item.nick||item.userID}}</text>
-        </view>
+    <view wx:if="{{callStatus}}" class="image-nick-box" wx:for="{{callGroupMemberProfile}}" wx:key="id" data-value="{{item}}" bindtap="handleGroupCallUserIDList">
+            <image class="image {{ checked.includes(selectedUserIDList, item.userID) && 'image-nick-box-active'}}"  src='{{item.avatar|| "https://sdk-web-1252463788.cos.ap-hongkong.myqcloud.com/component/TUIKit/assets/avatar_21.png"}}' />
+            <view class="groupowner-box">
+                <text class="groupownername-bootom"  wx:if="{{item.role==='Owner'}}">(群主)</text>
+                <text class="groupmembername" >{{item.nick||item.userID}}</text>
+            </view>  
     </view>
+    <view wx:if="{{!callStatus}}" class="image-nick-box" wx:for="{{groupMemberProfile}}" wx:key="id" data-value="{{item}}" bindtap="handleGroupCallUserIDList">
+            <image class="image {{ checked.includes(selectedUserIDList, item.userID) && 'image-nick-box-active'}}"  src='{{item.avatar|| "https://sdk-web-1252463788.cos.ap-hongkong.myqcloud.com/component/TUIKit/assets/avatar_21.png"}}' />
+            <view class="groupowner-box">
+                <text class="groupownername-bootom"  wx:if="{{item.role==='Owner'}}">(群主)</text>
+                <text class="groupmembername" >{{item.nick||item.userID}}</text>
+            </view>  
     </view>
      <view class="moremember" wx:if="{{showGetMore}}">
             <image class="image" src="../../static/assets/show.svg" bindtap="getMoreMember"/>
         </view>
+    </view>
     </view>
 </view>
 </view>
@@ -99,6 +109,7 @@
         </view>
     </view>
 </view>
+<wxs src = './checked.wxs' module = 'checked'/>
 
 
 

@@ -41,11 +41,8 @@ Component({
       const objectData = JSON.parse(callingmessage.data);
       switch (callingmessage.actionType) {
         case 1: {
-          if (objectData.call_end >= 0 && !callingmessage.groupID) {
+          if (objectData.call_end >= 0) {
             return `通话时长：${formateTime(objectData.call_end)}`;
-          }
-          if (callingmessage.groupID) {
-            return '结束群聊';
           }
           if (objectData.data && objectData.data.cmd === 'switchToAudio') {
             return '切换语音通话';
