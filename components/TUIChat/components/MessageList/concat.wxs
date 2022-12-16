@@ -8,6 +8,6 @@ var connect = function() {
     return arguments[0] + arguments[1]
 }
 module.exports = {
-    concat: concat
+    concat: concat,
     connect: connect
 };
