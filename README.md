@@ -7,7 +7,7 @@
 chat-uikit-wechat 是基于腾讯云 IM SDK 的一款 小程序 UI 组件库，它提供了一些通用的 UI 组件，包含会话、聊天、群组、音视频通话等功能。基于 UI 组件您可以像搭积木一样快速搭建起自己的业务逻辑。
 chat-uikit-wechat 中的组件在实现 UI 功能的同时，会调用 IM SDK 相应的接口实现 IM 相关逻辑和数据的处理，因而开发者在使用 chat-uikit-wechat 时只需关注自身业务或个性化扩展即可。
 chat-uikit-wechat 效果如下图所示：
-<img width="1015" src="https://qcloudimg.tencent-cloud.cn/raw/80eb9184eed18f94555643a1b4e84154.png" />
+<img width="1015" src="https://user-images.githubusercontent.com/40623255/202661227-d4227dcc-bada-42a6-a57b-0d0c0abc098b.png" />
 
 
 ## 发送您的第一条消息
@@ -25,7 +25,7 @@ chat-uikit-wechat 效果如下图所示：
 
 在微信开发者工具上创建一个小程序项目，选择不使用模版。
 
-<img  src="https://qcloudimg.tencent-cloud.cn/raw/d75ae9e06615aa7ac68d18e46b137528.png"/>
+<img  src="https://user-images.githubusercontent.com/40623255/202665077-b4f01580-69f2-493c-9fab-4f4ef8e5021a.png"/>
 
 #### 步骤2：下载 TUIKit 组件
 
