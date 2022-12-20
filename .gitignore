@@ -1,3 +1,4 @@
 node_modules
 TUIKit/components/TUICallKit
 TUIKit/lib/tsignaling-wx.js
+.DS_Store

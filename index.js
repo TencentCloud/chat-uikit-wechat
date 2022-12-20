@@ -41,14 +41,14 @@ Component({
       this.setData({
         config,
       }, () => {
-        wx.aegis.reportEvent({
-          name: 'TUICallKit',
-          ext1: 'TUICallKitInit',
-          ext2: wx.$chat_reportType,
-          ext3: wx.$chat_SDKAppID,
-        });
         this.TUICallKit = this.selectComponent('#TUICallKit');
         if (this.TUICallKit !== null) {
+          wx.aegis.reportEvent({
+            name: 'TUICallKit',
+            ext1: 'TUICallKitInit',
+            ext2: wx.$chat_reportType,
+            ext3: wx.$chat_SDKAppID,
+          });
           this.TUICallKit.init();
           wx.setStorageSync('_isTIMCallKit', true);
           wx.$_isTIMCallKit = '_isTIMCallKit';
