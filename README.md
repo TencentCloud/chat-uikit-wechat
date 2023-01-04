@@ -77,9 +77,10 @@ js 文件
 <img  src="https://qcloudimg.tencent-cloud.cn/raw/b9c02ec038b4b397f175591c7b5ef876.png"/>
 
 ```javascript
-const TIM = require('../../TUIKit/lib/tim-wx-sdk')
-import { genTestUserSig }  from '../../TUIKit/debug/GenerateTestUserSig'
-import TIMUploadPlugin from '../../TUIKit/lib/tim-upload-plugin'
+import TIM from '../../TUIKit/lib/tim-wx-sdk';
+import { genTestUserSig }  from '../../TUIKit/debug/GenerateTestUserSig';
+import TIMUploadPlugin from '../../TUIKit/lib/tim-upload-plugin';
+import TIMProfanityFilterPlugin from '../../TUIKit/lib/tim-profanity-filter-plugin';
 
 Page({
     data: {
@@ -101,6 +102,7 @@ Page({
         wx.$chat_userSig = userSig;
         wx.$TUIKitTIM = TIM;
         wx.$TUIKit.registerPlugin({ 'tim-upload-plugin': TIMUploadPlugin });
+        wx.$TUIKit.registerPlugin({ 'tim-profanity-filter-plugin': TIMProfanityFilterPlugin });
         wx.$TUIKit.login({
             userID: this.data.config.userID,
             userSig
@@ -224,7 +226,8 @@ app.js 文件
 ```javascript
 import TIM from './lib/tim-wx-sdk';
 import TIMUploadPlugin from './lib/tim-upload-plugin';
-import {genTestUserSig } from './debug/GenerateTestUserSig'
+import TIMProfanityFilterPlugin from './lib/tim-profanity-filter-plugin';
+import { genTestUserSig } from './debug/GenerateTestUserSig';
 App({
   onLaunch: function () {
     wx.$TUIKit = TIM.create({
@@ -236,6 +239,7 @@ App({
     wx.$chat_userID = this.globalData.config.userID;
     wx.$chat_userSig = userSig;
     wx.$TUIKit.registerPlugin({ 'tim-upload-plugin': TIMUploadPlugin });
+    wx.$TUIKit.registerPlugin({ 'tim-profanity-filter-plugin': TIMProfanityFilterPlugin });
     wx.$TUIKit.login({
       userID: this.globalData.config.userID,
       userSig

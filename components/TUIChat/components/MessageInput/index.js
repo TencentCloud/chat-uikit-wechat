@@ -255,6 +255,7 @@ Component({
               this.handleSendVideoMessage(file);
             }
           });
+          this.data.fileList = [];
         },
       });
     },
