@@ -77,7 +77,15 @@ Component({
       }
     },
     parseCustom(message) {
-      const { CONVERSATION_TYPE_TEXT, BUSINESS_ID_TEXT } = constant;
+      const { BUSINESS_ID_TEXT } = constant;
+      // 群消息解析
+      if (message.payload.data === BUSINESS_ID_TEXT.CREATE_GROUP) {
+        const renderDom = [{
+          type: 'group_create',
+          text: message.payload.extension,
+        }];
+        return renderDom;
+      }
       try {
         const customMessage = JSON.parse(message.payload.data);
         // 约定自定义消息的 data 字段作为区分，不解析的不进行展示
@@ -107,14 +115,6 @@ Component({
           const renderDom = [{
             type: 'text_link',
             text: customMessage.text,
-          }];
-          return renderDom;
-        }
-        // 群消息解析
-        if (message.payload.data === BUSINESS_ID_TEXT.CREATE_GROUP) {
-          const renderDom = [{
-            type: 'group_create',
-            text: message.payload.extension,
           }];
           return renderDom;
         }
