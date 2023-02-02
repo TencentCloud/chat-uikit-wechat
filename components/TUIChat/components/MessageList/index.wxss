@@ -32,6 +32,7 @@
   flex-direction: row;
   justify-content: flex-end;
   width: 100vw;
+  word-break: break-all;
 }
 .t-self-message-body {
   display: flex;
@@ -47,7 +48,6 @@
   /*background: #F8F8F8;*/
   border-radius: 2px 10px 10px 10px;
   margin-left: 8rpx;
-
 }
 
 .read-receipts {
