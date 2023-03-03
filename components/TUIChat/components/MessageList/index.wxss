@@ -170,7 +170,7 @@
 .new-message-item{
   position: absolute;
   right: 30px;
-  bottom: 180px;
+  bottom: 0;
   background: black;
   padding-right: 3px;
   padding-left: 3px;
@@ -178,6 +178,7 @@
   z-index: 6;
   box-shadow: 0 2px 16px 0 rgba(0,0,0,0.08);
   border-radius: 8rpx;
+
 }
 .new-message-box{
   display: flex;
