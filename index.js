@@ -1,5 +1,5 @@
 // TUIKitWChat/Chat/index.js
-import Aegis from './lib/aegis';
+import Aegis from 'aegis-mp-sdk';
 import constant from './utils/constant';
 const app = getApp();
 Component({
@@ -62,7 +62,7 @@ Component({
       });
       const TUIConversation = this.selectComponent('#TUIConversation');
       TUIConversation.init();
-      if (app?.globalData?.reportType !== constant.OPERATING_ENVIRONMENT) {
+      if (app.globalData.reportType && app.globalData.reportType !== constant.OPERATING_ENVIRONMENT) {
         this.aegisInit();
       }
       wx.$chat_reportType = 'chat-uikit-wechat';

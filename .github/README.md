@@ -35,38 +35,58 @@ chat-uikit-wechat 效果如下图所示：
 
 ### TUIKit 源码集成 - github方式集成
 
-#### 步骤1：创建项目
+### 步骤1：创建项目
 
 在微信开发者工具上创建一个小程序项目，选择不使用模版。
 
 <img  src="https://user-images.githubusercontent.com/40623255/202665077-b4f01580-69f2-493c-9fab-4f4ef8e5021a.png"/>
 
-#### 步骤2：下载 TUIKit 组件
+### 步骤2：下载 TUIKit 组件
 
-在微信开发者工具内新建终端。
+微信开发者工具创建的小程序不会默认创建 package.json 文件，因此您需要先创建 package.json 文件。新建终端，如下:
 
 <img  src="https://qcloudimg.tencent-cloud.cn/raw/6735b8ead18ffa7c80f2e16cebbdc9d1.png"/>
 
+输入:
+
+```shell
+npm init
+```
+
 通过 `git clone` 方式下载 TUIKit 组件及其相关依赖， 为了方便您的后续使用，建议您通过以下命令将整个 `chat-uikit-wechat` 复制到您项目的根目录下，并重命名为 TUIKit：
 
-
- ```shell
- # 项目根目录命令行执行
- git clone https://github.com/TencentCloud/chat-uikit-wechat.git
-
-
-# 移动并重命名到项目的根目录下
- # macOS
+#### 1.项目根目录命令行执行:
+  ```shell
+  git clone https://github.com/TencentCloud/chat-uikit-wechat.git
+  ```
+#### 2.移动并重命名到项目的根目录下:
+ ##### macOS端
+```shell
  mv chat-uikit-wechat ./TUIKit
- # windows
+```
+ #### windows端
+```shell
  move chat-uikit-wechat .\TUIKit
-
  ```
- 
-成功后目录结构如图所示：      
-<img width="300" src="https://qcloudimg.tencent-cloud.cn/raw/b2cf42ffef896731a170e138f4dd053f.png"/>
+#### 成功后目录结构如图所示：      
+<img width="300" src="https://qcloudimg.tencent-cloud.cn/raw/e4510d5500e6b34309bd6fb138dc30cd.png"/>
 
-#### 步骤3：引入 TUIKit 组件
+#### 3.下载依赖
+```shell
+npm install tim-wx-sdk tim-upload-plugin tim-profanity-filter-plugin  aegis-mp-sdk -s
+ ```
+
+#### 4.构建 npm，微信开发者工具-工具 > 构建 npm:
+
+<img width="300" src="https://qcloudimg.tencent-cloud.cn/raw/0a028bb1ebe42ed3f0d020728677e28c.png" class="zoom-img-hover">
+
+#### 构建 npm 后目录如下（新增 miniprogram_npm 文件夹）：
+<img width="300" src="https://qcloudimg.tencent-cloud.cn/raw/185bc6a4b2b57df64f297e5bc253d685.png" class="zoom-img-hover">
+
+>! 您构建 npm 时，若出现如下图所示提示，请点击【确定】按钮，该提示信息不会影响到组件的正常使用。
+><img width="300" src="https://qcloudimg.tencent-cloud.cn/raw/c28d2bdc58e09a642a6b6ac71467953a.png" class="zoom-img-hover">
+
+### 步骤3：引入 TUIKit 组件
 
 ##### 方式一： 主包引入 （适用于业务逻辑简单的小程序）
 在 page 页面引用 TUIKit 组件，为此您需要分别修改 index.wxml 、index.js 和 index.json。
@@ -75,21 +95,29 @@ wxml 文件
 
 <img  src="https://qcloudimg.tencent-cloud.cn/raw/9816f2a2141357fbaced7e77929392f8.png"/>
 
-```javascript
- <view>
+```html
+<view>
     <TUIKit config="{{config}}" id="TUIKit"></TUIKit>
 </view>
 ```
+config 的参数如下表所示：
+
+| 参数 | 类型 | 是否必填 | 含义
+| ------ | ------ | ------ | ------ |
+| userID | String | 是 | 当前用户的 ID，字符串类型，只允许包含英文字母（a-z 和 A-Z）、数字（0-9）、连词符（-）和下划线（_） |
+| SDKAPPID | Number | 是 | 云通信应用的 SDKAppID |
+| SECRETKEY | String | 是 | 密钥信息，详情可参考<a href="#append">步骤4</a> |
+| EXPIRETIME | Number | 否 | userSig 过期时间 |
 
 js 文件 
 
 <img  src="https://qcloudimg.tencent-cloud.cn/raw/b9c02ec038b4b397f175591c7b5ef876.png"/>
 
 ```javascript
-import TIM from '../../TUIKit/lib/tim-wx-sdk';
+import TIM from 'tim-wx-sdk';
+import TIMUploadPlugin from 'tim-upload-plugin';
+import TIMProfanityFilterPlugin from 'tim-profanity-filter-plugin';
 import { genTestUserSig }  from '../../TUIKit/debug/GenerateTestUserSig';
-import TIMUploadPlugin from '../../TUIKit/lib/tim-upload-plugin';
-import TIMProfanityFilterPlugin from '../../TUIKit/lib/tim-profanity-filter-plugin';
 
 
 Page({
@@ -136,7 +164,7 @@ Page({
 
 <img  src="https://qcloudimg.tencent-cloud.cn/raw/866e12c4bf19e08c71c233158cc19106.png"/>
 
-```javascript
+```json
 {
   "usingComponents": {
     "TUIKit": "../../TUIKit/index"
@@ -145,7 +173,7 @@ Page({
 }
 ```
 
-##### 方式二：分包引入 （适用于业务逻辑复杂，按需载入的小程序）
+##### 方式二：分包引入 （适用于业务逻辑复杂，按需载入的小程序） 看一下 debug复制
 小程序分包有如下好处：
 - 规避所有逻辑代码放主包，导致主包文件体积超限问题
 - 支持按需载入，降低小程序载入耗时和页面渲染耗时
@@ -154,11 +182,11 @@ Page({
 1.在自己项目里创建分包，本文以 TUI-CustomerService 为例。和 pages 同级创建 TUI-CustomerService 文件夹，并在文件夹内部创建 pages 文件夹并且在其下创建 index 页面。
 创建后的目录结构：
 
-<img  src="https://qcloudimg.tencent-cloud.cn/raw/bc1352da5ea30bb3a8134bedbc421a9b.png"/>
+<img  src="https://qcloudimg.tencent-cloud.cn/raw/abaeb327a9f007c79f55695b3835ced9.png"/>
 
 2.在 app.json 文件注册分包。
 
-```javascript
+```json
 {
   "pages": [
     "pages/index/index"
@@ -188,9 +216,9 @@ Page({
 
 <img  src="https://qcloudimg.tencent-cloud.cn/raw/5abd5dc90d2e5d53b3ed1a264e0398f8.png"/>
 
-4.将 TUIKit 文件夹下的 debug 和 lib 文件夹复制到主包。
+4.将 TUIKit 文件夹下的 debug 文件夹复制到主包。
 
-<img  src="https://qcloudimg.tencent-cloud.cn/raw/00a9557954be659dd32f00d45195daac.png"/>
+<img  src="https://qcloudimg.tencent-cloud.cn/raw/b6a8236cce4a2143f886fa141ee106a5.png"/>
 
 5. 在分包内引用 TUIKit组件，为此需要分别修改分包内部 index.wxml 、index.js 、index.json 文件，以及 app.js 文件。
 
@@ -198,11 +226,19 @@ wxml 文件
 
 <img  src="https://qcloudimg.tencent-cloud.cn/raw/072f4f8f78d512f28ac8e82ed9925055.png"/>
 
-```javascript
- <view>
+```html
+<view>
     <TUIKit config="{{config}}" id="TUIKit"></TUIKit>
 </view>
 ```
+config 的参数如下表所示：
+
+| 参数 | 类型 | 是否必填 | 含义
+| ------ | ------ | ------ | ------ |
+| userID | String | 是 | 当前用户的 ID，字符串类型，只允许包含英文字母（a-z 和 A-Z）、数字（0-9）、连词符（-）和下划线（_） |
+| SDKAPPID | Number | 是 | 云通信应用的 SDKAppID |
+| SECRETKEY | String | 是 | 密钥信息，详情可参考<a href="#append">步骤4</a> |
+| EXPIRETIME | Number | 否 | userSig 过期时间 |
 
  js 文件
 
@@ -224,7 +260,7 @@ Page({
 
 <img  src="https://qcloudimg.tencent-cloud.cn/raw/4499096c37b9b29abffa21b71fb90e9e.png"/>
 
-```javascript
+```json
   {
   "usingComponents": {
     "TUIKit": "../TUIKit/index"
@@ -237,9 +273,9 @@ app.js 文件
 <img  src="https://qcloudimg.tencent-cloud.cn/raw/170aa919af6db0e7b32ace5da9d417f1.png"/>
 
 ```javascript
-import TIM from './lib/tim-wx-sdk';
-import TIMUploadPlugin from './lib/tim-upload-plugin';
-import TIMProfanityFilterPlugin from './lib/tim-profanity-filter-plugin';
+import TIM from 'tim-wx-sdk';
+import TIMUploadPlugin from 'tim-upload-plugin';
+import TIMProfanityFilterPlugin from 'tim-profanity-filter-plugin';
 import { genTestUserSig } from './debug/GenerateTestUserSig';
 App({
   onLaunch: function () {
@@ -258,18 +294,22 @@ App({
       userSig
   });
     // 监听系统级事件
-    wx.$TUIKit.on(wx.$TUIKitTIM.EVENT.SDK_READY, this.onSDKReady);
+    wx.$TUIKit.on(wx.$TUIKitTIM.EVENT.SDK_READY, this.onSDKReady,this);
+  },
+  onUnload() {
+    wx.$TUIKit.off(wx.$TUIKitTIM.EVENT.SDK_READY, this.onSDKReady,this);
   },
   globalData: {
     config: {
-      userID: '', //User ID
+      userID: '', // User ID
       SECRETKEY: '', // Your secretKey
       SDKAPPID: 0, // Your SDKAppID
       EXPIRETIME: 604800,
     },
   },
-  onSDKReady() {
-  },
+  onSDKReady(event) {
+    // 监听到此事件后可调用 SDK 发送消息等 API，使用 SDK 的各项功能。
+  }
 });
 ```
 6. 按需载入分包，您需要修改主包 pages 下的 index.wxml 、index.js。
@@ -298,7 +338,7 @@ Page({
 })
 ```
 
-#### 步骤4： 获取 SDKAppID 、密钥与 userID
+### <p id="append">步骤4： 获取 SDKAppID 、SECRETKEY 与 userID</p>
 
 设置步骤3示例代码中的相关参数 SDKAPPID、SECRETKEY 以及 userID ，其中  SDKAppID 和密钥等信息，可通过 [即时通信 IM 控制台](https://console.cloud.tencent.com/im)  获取，单击目标应用卡片，进入应用的基础配置页面。例如：
 <img style="width:600px; max-width: inherit;" src="https://qcloudimg.tencent-cloud.cn/raw/44a331ce39f05f7080cf33ca9bc8e5dd.png"/>
@@ -336,7 +376,7 @@ UserSig 是用户登录即时通信 IM 的密码，其本质是对 UserID 等信
 >
 > 本文示例代码采用的获取 UserSig 的方案是在客户端代码中配置 SECRETKEY，该方法中 SECRETKEY 很容易被反编译逆向破解，一旦您的密钥泄露，攻击者就可以盗用您的腾讯云流量，因此**该方法仅适合本地跑通功能调试**。 正确的 UserSig 签发方式请参见上文。
 
-### 3. 小程序如果需要上线或者部署正式环境怎么办？
+#### 3. 小程序如果需要上线或者部署正式环境怎么办？
 请在**微信公众平台**>**开发**>**开发管理**>**开发设置**>**服务器域名**中进行域名配置：
 
 从v2.11.2起 SDK 支持了 WebSocket，WebSocket 版本须添加以下域名到 **socket 合法域名**：
