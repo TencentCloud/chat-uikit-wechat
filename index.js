@@ -62,7 +62,7 @@ Component({
       });
       const TUIConversation = this.selectComponent('#TUIConversation');
       TUIConversation.init();
-      if (app.globalData.reportType && app.globalData.reportType !== constant.OPERATING_ENVIRONMENT) {
+      if (!app.globalData || app.globalData.reportType !== constant.OPERATING_ENVIRONMENT) {
         this.aegisInit();
       }
       wx.$chat_reportType = 'chat-uikit-wechat';
