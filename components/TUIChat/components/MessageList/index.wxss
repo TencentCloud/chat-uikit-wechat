@@ -32,6 +32,7 @@
   flex-direction: row;
   justify-content: flex-end;
   width: 100vw;
+  word-break: break-all;
 }
 .t-self-message-body {
   display: flex;
@@ -47,7 +48,6 @@
   /*background: #F8F8F8;*/
   border-radius: 2px 10px 10px 10px;
   margin-left: 8rpx;
-
 }
 
 .read-receipts {
@@ -170,7 +170,7 @@
 .new-message-item{
   position: absolute;
   right: 30px;
-  bottom: 180px;
+  bottom: 0;
   background: black;
   padding-right: 3px;
   padding-left: 3px;
@@ -178,6 +178,7 @@
   z-index: 6;
   box-shadow: 0 2px 16px 0 rgba(0,0,0,0.08);
   border-radius: 8rpx;
+
 }
 .new-message-box{
   display: flex;

@@ -35,27 +35,36 @@ chat-uikit-wechat 效果如下图所示：
 
 输入:
 
-```javascript
+```shell
 npm init
 ```
 然后通过 npm 方式下载 TUIKit 组件， 为了方便您后续的拓展，建议您将 TUIKit 组件复制到自己的小程序目录下:
 
 macOS端
-```javascript
+```shell
 npm i @tencentcloud/chat-uikit-wechat
 ```
-```javascript
+```shell
 mkdir -p ./TUIKit && cp -r node_modules/@tencentcloud/chat-uikit-wechat/ ./TUIKit
 ```
 Windows端
-```javascript
+```shell
 npm i @tencentcloud/chat-uikit-wechat
 ```
-```javascript
+```shell
 xcopy node_modules\@tencentcloud\chat-uikit-wechat .\TUIKit /i /e
 ```
 成功后目录结构如图所示：      
-<img width="300" src="https://qcloudimg.tencent-cloud.cn/raw/8f0b5274acd80602f2a431313034a2b9.png"/>
+<img width="300" src="https://qcloudimg.tencent-cloud.cn/raw/e4510d5500e6b34309bd6fb138dc30cd.png"/>
+
+构建 npm，微信开发者工具-工具 > 构建 npm:
+<img width="300" src="https://qcloudimg.tencent-cloud.cn/raw/0a028bb1ebe42ed3f0d020728677e28c.png" class="zoom-img-hover">
+
+构建 npm 后目录如下（新增 miniprogram_npm 文件夹）：
+<img width="300" src="https://qcloudimg.tencent-cloud.cn/raw/185bc6a4b2b57df64f297e5bc253d685.png" class="zoom-img-hover">
+
+>! 您构建 npm 时，若出现如下图所示提示，请点击【确定】按钮，该提示信息不会影响到组件的正常使用。
+><img width="300" src="https://qcloudimg.tencent-cloud.cn/raw/c28d2bdc58e09a642a6b6ac71467953a.png" class="zoom-img-hover">
 
 #### 步骤3：引入 TUIKit 组件
 
@@ -66,21 +75,29 @@ wxml 文件
 
 <img  src="https://qcloudimg.tencent-cloud.cn/raw/9816f2a2141357fbaced7e77929392f8.png"/>
 
-```javascript
+```html
  <view>
     <TUIKit config="{{config}}" id="TUIKit"></TUIKit>
 </view>
 ```
+config 的参数如下表所示：
+
+| 参数 | 类型 | 是否必填 | 含义
+| ------ | ------ | ------ | ------ |
+| userID | String | 是 | 当前用户的 ID，字符串类型，只允许包含英文字母（a-z 和 A-Z）、数字（0-9）、连词符（-）和下划线（_） |
+| SDKAPPID | Number | 是 | 云通信应用的 SDKAppID |
+| SECRETKEY | String | 是 | 密钥信息，详情可参考<a href="#append">步骤4</a> |
+| EXPIRETIME | Number | 否 | userSig 过期时间 |
 
 js 文件 
 
 <img  src="https://qcloudimg.tencent-cloud.cn/raw/b9c02ec038b4b397f175591c7b5ef876.png"/>
 
 ```javascript
-import TIM from '../../TUIKit/lib/tim-wx-sdk';
+import TIM from 'tim-wx-sdk';
+import TIMUploadPlugin from 'tim-upload-plugin';
+import TIMProfanityFilterPlugin from 'tim-profanity-filter-plugin';
 import { genTestUserSig }  from '../../TUIKit/debug/GenerateTestUserSig';
-import TIMUploadPlugin from '../../TUIKit/lib/tim-upload-plugin';
-import TIMProfanityFilterPlugin from '../../TUIKit/lib/tim-profanity-filter-plugin';
 
 Page({
     data: {
@@ -126,7 +143,7 @@ Page({
 
 <img  src="https://qcloudimg.tencent-cloud.cn/raw/866e12c4bf19e08c71c233158cc19106.png"/>
 
-```javascript
+```json
 {
   "usingComponents": {
     "TUIKit": "../../TUIKit/index"
@@ -143,11 +160,12 @@ Page({
 分包流程：
 1.在自己项目里创建分包，本文以 TUI—CustomerService 为例。和 pages 同级创建 TUI—CustomerService 文件夹，并在文件夹内部创建 pages 文件夹并且其下创建 index 页面。
 创建后的目录结构：
-<img  src="https://qcloudimg.tencent-cloud.cn/raw/bc1352da5ea30bb3a8134bedbc421a9b.png"/>
+
+<img  src="https://qcloudimg.tencent-cloud.cn/raw/abaeb327a9f007c79f55695b3835ced9.png"/>
 
 2.在 app.json 文件注册分包。
 
-```javascript
+```json
 {
   "pages": [
     "pages/index/index"
@@ -176,8 +194,8 @@ Page({
 成功后的目录结构:
 <img  src="https://qcloudimg.tencent-cloud.cn/raw/5abd5dc90d2e5d53b3ed1a264e0398f8.png"/>
 
-4.将 TUIKit 文件夹下的 debug 和 lib 文件夹复制到主包。
-<img  src="https://qcloudimg.tencent-cloud.cn/raw/00a9557954be659dd32f00d45195daac.png"/>
+4.将 TUIKit 文件夹下的 debug 文件夹复制到主包。
+<img  src="https://qcloudimg.tencent-cloud.cn/raw/b6a8236cce4a2143f886fa141ee106a5.png"/>
 
 5. 在分包内引用 TUIKit组件，为此需要分别修改分包内部 index.wxml 、index.js 、index.json 文件，以及 app.js 文件。
 
@@ -185,11 +203,19 @@ wxml 文件
 
 <img  src="https://qcloudimg.tencent-cloud.cn/raw/072f4f8f78d512f28ac8e82ed9925055.png"/>
 
-```javascript
+```html
  <view>
     <TUIKit config="{{config}}" id="TUIKit"></TUIKit>
 </view>
 ```
+config 的参数如下表所示：
+
+| 参数 | 类型 | 是否必填 | 含义
+| ------ | ------ | ------ | ------ |
+| userID | String | 是 | 当前用户的 ID，字符串类型，只允许包含英文字母（a-z 和 A-Z）、数字（0-9）、连词符（-）和下划线（_） |
+| SDKAPPID | Number | 是 | 云通信应用的 SDKAppID |
+| SECRETKEY | String | 是 | 密钥信息，详情可参考<a href="#append">步骤4</a> |
+| EXPIRETIME | Number | 否 | userSig 过期时间 |
 
  js 文件
 
@@ -211,7 +237,7 @@ Page({
 
 <img  src="https://qcloudimg.tencent-cloud.cn/raw/4499096c37b9b29abffa21b71fb90e9e.png"/>
 
-```javascript
+```json
   {
   "usingComponents": {
     "TUIKit": "../TUIKit/index"
@@ -224,9 +250,9 @@ app.js 文件
 <img  src="https://qcloudimg.tencent-cloud.cn/raw/170aa919af6db0e7b32ace5da9d417f1.png"/>
 
 ```javascript
-import TIM from './lib/tim-wx-sdk';
-import TIMUploadPlugin from './lib/tim-upload-plugin';
-import TIMProfanityFilterPlugin from './lib/tim-profanity-filter-plugin';
+import TIM from 'tim-wx-sdk';
+import TIMUploadPlugin from 'tim-upload-plugin';
+import TIMProfanityFilterPlugin from 'tim-profanity-filter-plugin';
 import { genTestUserSig } from './debug/GenerateTestUserSig';
 App({
   onLaunch: function () {
@@ -245,18 +271,22 @@ App({
       userSig
   });
     // 监听系统级事件
-    wx.$TUIKit.on(wx.$TUIKitTIM.EVENT.SDK_READY, this.onSDKReady);
+    wx.$TUIKit.on(wx.$TUIKitTIM.EVENT.SDK_READY, this.onSDKReady,this);
+  },
+  onUnload() {
+    wx.$TUIKit.off(wx.$TUIKitTIM.EVENT.SDK_READY, this.onSDKReady,this);
   },
   globalData: {
     config: {
-      userID: '', //User ID
+      userID: '', // User ID
       SECRETKEY: '', // Your secretKey
       SDKAPPID: 0, // Your SDKAppID
       EXPIRETIME: 604800,
     },
   },
-  onSDKReady() {
-  },
+  onSDKReady(event) {
+    // 监听到此事件后可调用 SDK 发送消息等 API，使用 SDK 的各项功能。
+  }
 });
 ```
 6. 按需载入分包，您需要修改主包 pages 下的 index.wxml 、index.js。
@@ -265,7 +295,7 @@ wxml 文件
 
 <img  src="https://qcloudimg.tencent-cloud.cn/raw/86f2698910c2e255727f419625441ed9.png"/>
 
-```javascript
+```html
 <view class="container" bindtap="handleJump">
   载入腾讯云 IM 分包
 </view>
@@ -285,7 +315,7 @@ Page({
 })
 ```
 
-#### 步骤4： 获取 SDKAppID 、密钥与 userID
+#### <p id="append">步骤4： 获取 SDKAppID 、SECRETKEY 与 userID</p>
 
 设置步骤3示例代码中的相关参数 SDKAPPID、SECRETKEY 以及 userID ，其中  SDKAppID 和密钥等信息，可通过 [即时通信 IM 控制台](https://console.cloud.tencent.com/im)  获取，单击目标应用卡片，进入应用的基础配置页面。例如：
 <img style="width:600px; max-width: inherit;" src="https://qcloudimg.tencent-cloud.cn/raw/44a331ce39f05f7080cf33ca9bc8e5dd.png"/>

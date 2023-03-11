@@ -1,5 +1,5 @@
 // TUIKitWChat/Chat/index.js
-import Aegis from './lib/aegis';
+import Aegis from 'aegis-mp-sdk';
 import constant from './utils/constant';
 const app = getApp();
 Component({
@@ -42,7 +42,10 @@ Component({
         config,
       }, () => {
         this.TUICallKit = this.selectComponent('#TUICallKit');
-        if (this.TUICallKit !== null) {
+        // 这里的 isExitInit 用来判断 TUICallKit init 方法是否存在
+        // 当 isExitInit 为 true 时，进行 callkit 初始化和日志上报
+        const isExitInit = (this.TUICallKit.init !== undefined);
+        if (this.TUICallKit !== null && isExitInit) {
           wx.aegis.reportEvent({
             name: 'TUICallKit',
             ext1: 'TUICallKitInit',
@@ -59,7 +62,7 @@ Component({
       });
       const TUIConversation = this.selectComponent('#TUIConversation');
       TUIConversation.init();
-      if (app?.globalData?.reportType !== constant.OPERATING_ENVIRONMENT) {
+      if (!app.globalData || app.globalData.reportType !== constant.OPERATING_ENVIRONMENT) {
         this.aegisInit();
       }
       wx.$chat_reportType = 'chat-uikit-wechat';

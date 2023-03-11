@@ -290,7 +290,7 @@ Component({
     },
     // 更新会话的时间戳，显示会话里的最后一条消息
     $updateTimeAgo(conversation) {
-      if (conversation.conversationID) {
+      if (conversation.conversationID && conversation.lastMessage.lastTime) {
         conversation.lastMessage.timeago = caculateTimeago(conversation.lastMessage.lastTime * 1000);
         if (conversation.lastMessage.isRevoked) {
           this.setData({
