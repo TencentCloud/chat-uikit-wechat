@@ -127,10 +127,10 @@ Component({
         return 'https://web.sdk.qcloud.com/component/TUIKit/assets/system.png';
       }
       if (conversation.type === 'C2C') {
-        return conversation.userProfile.avatar || 'https://sdk-web-1252463788.cos.ap-hongkong.myqcloud.com/component/TUIKit/assets/avatar_21.png';
+        return conversation.userProfile.avatar || 'https://web.sdk.qcloud.com/component/TUIKit/assets/avatar_21.png';
       }
       if (conversation.type === 'GROUP') {
-        return conversation.groupProfile.avatar || '../../../../static/assets/gruopavatar.svg';
+        return conversation.groupProfile.avatar || '../../../../static/assets/group-avatar.svg';
       }
     },
     // 删除会话
@@ -309,7 +309,7 @@ Component({
     // 会话头像显示失败显示的默认头像
     handleimageerro() {
       this.setData({
-        setConversationAvatar: '../../../../static/assets/gruopavatar.svg',
+        setConversationAvatar: '../../../../static/assets/group-avatar.svg',
       });
     },
     // 判断该用户的状态并展示出来

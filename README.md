@@ -54,16 +54,20 @@ npm i @tencentcloud/chat-uikit-wechat
 ```shell
 xcopy node_modules\@tencentcloud\chat-uikit-wechat .\TUIKit /i /e
 ```
-成功后目录结构如图所示：      
+成功后目录结构如图所示： 
+
 <img width="300" src="https://qcloudimg.tencent-cloud.cn/raw/e4510d5500e6b34309bd6fb138dc30cd.png"/>
 
 构建 npm，微信开发者工具-工具 > 构建 npm:
+
 <img width="300" src="https://qcloudimg.tencent-cloud.cn/raw/0a028bb1ebe42ed3f0d020728677e28c.png" class="zoom-img-hover">
 
 构建 npm 后目录如下（新增 miniprogram_npm 文件夹）：
+
 <img width="300" src="https://qcloudimg.tencent-cloud.cn/raw/185bc6a4b2b57df64f297e5bc253d685.png" class="zoom-img-hover">
 
 >! 您构建 npm 时，若出现如下图所示提示，请点击【确定】按钮，该提示信息不会影响到组件的正常使用。
+>
 ><img width="300" src="https://qcloudimg.tencent-cloud.cn/raw/c28d2bdc58e09a642a6b6ac71467953a.png" class="zoom-img-hover">
 
 #### 步骤3：引入 TUIKit 组件
@@ -191,10 +195,13 @@ Page({
 }
 ```
 3.将 TUIKit 文件夹复制到分包目录下。
+
 成功后的目录结构:
+
 <img  src="https://qcloudimg.tencent-cloud.cn/raw/5abd5dc90d2e5d53b3ed1a264e0398f8.png"/>
 
 4.将 TUIKit 文件夹下的 debug 文件夹复制到主包。
+
 <img  src="https://qcloudimg.tencent-cloud.cn/raw/b6a8236cce4a2143f886fa141ee106a5.png"/>
 
 5. 在分包内引用 TUIKit组件，为此需要分别修改分包内部 index.wxml 、index.js 、index.json 文件，以及 app.js 文件。

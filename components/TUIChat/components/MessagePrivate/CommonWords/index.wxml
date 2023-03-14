@@ -5,7 +5,7 @@
       <view style="color: #006EFF; font-family: PingFangSC-Regular;" class="tui-common-words-close" bindtap="handleClose">关闭</view>
     </view>
     <view class="tui-search-bar">
-      <image class="tui-searchcion" src="../../../../static/assets/serach-icon.svg" />
+      <image class="tui-searchcion" src="../../../../../static/assets/search-icon.svg" />
       <input class="tui-search-bar-input" value="{{words}}" placeholder="请输入您想要提出的问题" bindinput='wordsInput'/>
     </view>
     <scroll-view class="tui-common-words-list" scroll-y="true" enable-flex="true">

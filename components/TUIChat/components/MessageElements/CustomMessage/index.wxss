@@ -33,7 +33,6 @@
   line-height: 40rpx;
   font-size: 24rpx;
   margin-bottom: 12rpx;
-  word-break: break-word;
 }
 
 .custom-content-price {
@@ -94,6 +93,7 @@ font-size: 32rpx;
 color: #000000;
 letter-spacing: 0;
 line-height: 42rpx;
+line-break: anywhere;
 }
 .message-body-span-link {
   color: blue;

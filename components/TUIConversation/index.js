@@ -220,7 +220,7 @@ Component({
         });
       })
         .catch((imError) => {
-          console.warn('getUserStatus error:', imError); // 获取用户状态失败的相关信息
+          console.warn('开启在线状态功能，需要您开通旗舰版套餐：https://buy.cloud.tencent.com/avc'); // 获取用户状态失败的相关信息
         });
       wx.$TUIKit.subscribeUserStatus({ userIDList });
     },

@@ -34,6 +34,7 @@
   letter-spacing: 0;
   line-height: 40rpx;
   font-size: 28rpx;
+  line-break: anywhere;
 }
 .message-body-span-image {
   display: inline-block;
