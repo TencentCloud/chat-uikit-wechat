@@ -21,7 +21,7 @@
 }
 
 .conversation-title {
-  position:absolute;
+  position: absolute;
   width: 350rpx;
   height: 88rpx;
   line-height: 56rpx;

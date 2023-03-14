@@ -5,7 +5,7 @@
       <view style="color: #006EFF; font-family: PingFangSC-Regular;" class="tui-cards-close" bindtap="handleClose">关闭</view>
     </view>
     <view class="tui-search-bar">
-      <image class="tui-searchcion" src="../../../../static/assets/serach-icon.svg" />
+      <image class="tui-searchcion" src="../../../../../static/assets/search-icon.svg" />
       <input class="tui-search-bar-input" value="{{words}}" placeholder="搜索" bindinput='wordsInput'/>
     </view>
     <scroll-view class="tui-order-list" scroll-y="true" enable-flex="true">

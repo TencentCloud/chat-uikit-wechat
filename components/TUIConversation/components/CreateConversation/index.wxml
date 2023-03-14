@@ -5,7 +5,7 @@
   </view>
   <view class="tui-search-area">
     <view class="tui-search-bar">
-      <image class="tui-searchcion" src="../../../../static/assets/serach-icon.svg" />
+      <image class="tui-searchcion" src="../../../../static/assets/search-icon.svg" />
       <input class="tui-search-bar-input" value="{{userID}}" placeholder="请输入用户ID" bindinput='userIDInput' bindconfirm="getuserProfile"  bindblur="getuserProfile"/>
 
     </view>

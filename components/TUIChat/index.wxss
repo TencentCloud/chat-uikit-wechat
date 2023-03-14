@@ -35,20 +35,6 @@
   left: 40rpx;
   bottom: 20rpx;
 }
-
-.conversation-title {
-  position:absolute;
-  width: 350rpx;
-  height: 88rpx;
-  line-height: 56rpx;
-  font-size: 36rpx;
-  color: #FFFFFF;
-  bottom: 0;
-  left: 200rpx;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
 .tui-chatroom-navigatorbar{
   position: relative;
   /*top: 0;*/
@@ -78,6 +64,8 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  white-space: nowrap;
+  overflow: hidden;
 }
 .list-box {
   position: absolute;

@@ -63,7 +63,7 @@
 <view wx:if="{{showDownJump}}" bindtap="handleJumpNewMessage">
     <view class="new-message-item" > 
     <view class="new-message-box">
-    <image class="icon-left" src="../../../static/assets/down.svg"/>
+    <image class="icon-left" src="../../../../static/assets/down.svg"/>
     <text>{{showNewMessageCount.length}}条新消息</text>
     </view>
     </view>
@@ -71,7 +71,7 @@
 <view wx:if="{{showUpJump}}" bindtap="handleJumpUnreadMessage" >
     <view class="unread-message-item" > 
     <view class="unread-message-box">
-    <image class="icon-left" src="../../../static/assets/up.svg"/>
+    <image class="icon-left" src="../../../../static/assets/up.svg"/>
     <text wx:if="{{isLostsOfUnread}}"> 99+条未读</text>
     <text wx:else> {{unreadCount}}条未读</text>
     </view>

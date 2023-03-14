@@ -53,5 +53,4 @@
   max-width: 53vw;
   display: inline;
   word-wrap: break-word;
-  word-break: break-all;
 }
