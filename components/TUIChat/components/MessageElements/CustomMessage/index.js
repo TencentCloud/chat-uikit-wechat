@@ -105,7 +105,8 @@ Component({
           const renderDom = [{
             type: 'evaluation',
             title: message.payload.description,
-            score: customMessage.score,
+            // 这里使用 parseInt 的原因是 这样可实现对数值的正确循环
+            score: parseInt(customMessage.score),
             description: customMessage.comment,
           }];
           return renderDom;

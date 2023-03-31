@@ -88,7 +88,7 @@ Component({
       const currentMemberCount = group.memberCount;
       this.setData({
         showGetMore: currentMemberCount  > this.data.getMemberCount,
-        showText: group.selfInfo.role === 'Owner' ? '解散群聊' : '',
+        showText: group.selfInfo.role === 'Owner' ? '解散群聊' : '退出群聊',
       });
       wx.$TUIKit.getGroupMemberList({
         groupID: this.data.conversation.groupProfile.groupID,
@@ -285,8 +285,8 @@ Component({
         });
     },
     // 实时更新群成员个数
-    updateMemberCount(event) {
-      if (event === 1) { // 1是有成员加群
+    updateMemberCount(groupOperationType) {
+      if (groupOperationType === 1) { // 1是有成员加群
         wx.$TUIKit.getGroupMemberList({
           groupID: this.data.conversation.groupProfile.groupID,
           count: this.data.getMemberCount, offset: 0,
@@ -302,7 +302,7 @@ Component({
           }
         });
       }
-      if (event === 2) { // 2是有成员退群
+      if (groupOperationType === 2) { // 2是有成员退群
         wx.$TUIKit.getGroupMemberList({
           groupID: this.data.conversation.groupProfile.groupID,
           count: this.data.getMemberCount, offset: 0,

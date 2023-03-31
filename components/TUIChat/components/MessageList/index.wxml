@@ -1,5 +1,5 @@
-<view class="container">
-<scroll-view  class="message-list-container" scroll-y="true"   scroll-into-view="{{jumpAim}}" refresher-enabled="{{true}}" bindrefresherrefresh="refresh" refresher-triggered="{{triggered}}" lower-threshold="200"  bindscrolltolower="scrollHandler">
+<view class="container" id="container">
+<scroll-view  class="message-list-container" scroll-y="true"   scroll-into-view="{{jumpAim}}" refresher-enabled="{{true}}" bindrefresherrefresh="refresh" refresher-triggered="{{triggered}}" lower-threshold="200"  bindscrolltolower="scrollHandler" bindscroll="onScroll">
     <view class="no-message" wx:if="{{isCompleted}}">没有更多啦</view>
     <view class="t-message" wx:if="{{conversation.type !== '@TIM#SYSTEM'}}" wx:for="{{messageList}}" wx:key="index"  data-index ='{{index}}'  >
          <view class="time-pop-mask" data-value="{{item.time}}" wx:if="{{showMessageTime}}">
@@ -60,11 +60,11 @@
     </view>
 </scroll-view>
 </view>
-<view wx:if="{{showDownJump}}" bindtap="handleJumpNewMessage">
+<view wx:if="{{showUnreadMessageCount}}" bindtap="handleJumpNewMessage">
     <view class="new-message-item" > 
     <view class="new-message-box">
     <image class="icon-left" src="../../../../static/assets/down.svg"/>
-    <text>{{showNewMessageCount.length}}条新消息</text>
+    <text>{{newMessageCount.length}}条新消息</text>
     </view>
     </view>
 </view>
