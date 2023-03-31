@@ -95,7 +95,18 @@ Component({
           }
         })
         .catch((imError) => {
-          console.warn('joinGroup error:', imError); // 申请加群失败的相关信息
+          wx.hideLoading();
+          if (imError.code === 10007) {
+            wx.showToast({
+              title: '讨论组类型群不允许申请加群',
+              icon: 'none',
+            });
+          } else {
+            wx.showToast({
+              title: '未找到该群组',
+              icon: 'none',
+            });
+          }
         });
     },
   },

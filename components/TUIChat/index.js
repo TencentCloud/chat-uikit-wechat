@@ -59,6 +59,14 @@ Component({
         });
       }
     },
+    ready() {
+      const query = wx.createSelectorQuery().in(this);
+      query.select('.message-list').boundingClientRect((rect) => {
+        this.setData({
+          chatContainerHeight: rect.height
+        })
+      }).exec();
+    }
   },
   /**
    * 组件的初始数据
@@ -87,6 +95,8 @@ Component({
     showTips: false,
     showGroupTips: false,
     showAll: false,
+    chatContainerHeight: 0,
+    newGroupProfile: {}
   },
 
   /**
@@ -162,7 +172,7 @@ Component({
       this.triggerEvent('showConversationList');
     },
     changeMemberCount(event) {
-      this.selectComponent('#TUIGroup').updateMemberCount(event.detail.groupOptionsNumber);
+      this.selectComponent('#TUIGroup').updateMemberCount(event.detail.groupOperationType);
     },
     resendMessage(event) {
       this.selectComponent('#MessageInput').onInputValueChange(event);
@@ -205,6 +215,18 @@ Component({
         url,
       });
     },
+    handleNewGroupProfile(event) {
+      const newGroupProfile = event.detail;
+      for(let key in newGroupProfile) {
+        // 群名称变更
+        if(key === 'groupName') {
+          const conversationName = newGroupProfile[key];
+          this.setData({
+            conversationName: conversationName
+          })
+        }
+      }
+    }
   },
 
 });

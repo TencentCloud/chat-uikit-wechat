@@ -4,7 +4,7 @@
      <image class="tui-navigatorbar-back" bindtap="goBack" src="../../static/assets/ic_back_white.svg" />
      <view class="conversation-title">{{conversationName}}</view>
     </view>
-  <view   class="list-box {{ showTips && 'list-box-notips'}} || {{ showGroupTips && 'list-box-group'}}  || {{ showAll && 'list-box-group-notips'}}  ">
+  <view class="list-box {{ showTips && 'list-box-notips'}} || {{ showGroupTips && 'list-box-group'}}  || {{ showAll && 'list-box-group-notips'}} ">
     <view wx:if="{{showTips}}" class="safetytips-box">
     <view class="safetytips">
       <text>【安全提示】本 APP 仅用于体验腾讯云即时通信 IM 产品功能，不可用于业务洽谈与拓展。请勿轻信汇款、中奖等涉及钱款等信息，勿轻易拨打陌生电话，谨防上当受骗。</text>
@@ -12,7 +12,7 @@
     </view>
   </view>
     <scroll-view  class="message-list" bindtap="triggerClose">
-    <MessageList id="MessageList" conversation="{{conversation}}" unreadCount="{{unreadCount}}" bind:changeMemberCount="changeMemberCount" bind:resendMessage="resendMessage" bind:typing="typing"></MessageList>
+    <MessageList id="MessageList" conversation="{{conversation}}" unreadCount="{{unreadCount}}" chatContainerHeight="{{chatContainerHeight}}" bind:changeMemberCount="changeMemberCount" bind:resendMessage="resendMessage" bind:typing="typing" bind:handleNewGroupProfile="handleNewGroupProfile"></MessageList>
   </scroll-view>
   </view>
   <view class="group-profile">

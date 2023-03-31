@@ -29,6 +29,15 @@ Component({
         });
       },
     },
+    chatContainerHeight:{
+      type: Number,
+      value: '',
+      observer(newVal) {
+        this.setData({
+          chatContainerHeight: newVal,
+        });
+      },
+    }
   },
 
   /**
@@ -53,7 +62,7 @@ Component({
     deleteMessage: '',
     RevokeID: '', // 撤回消息的ID用于处理对方消息展示界面
     showName: '',
-    showDownJump: false,
+    showUnreadMessageCount: false,
     showUpJump: false,
     jumpAim: '',
     messageIndex: '',
@@ -61,8 +70,8 @@ Component({
     Show: false,
     UseData: '',
     chargeLastmessage: '',
-    groupOptionsNumber: '',
-    showNewMessageCount: [],
+    groupOperationType: 0,
+    newMessageCount: [],
     messageTime: '',
     messageHistoryTime: '',
     messageTimeID: {},
@@ -81,6 +90,11 @@ Component({
     errorMessage: {},
     errorMessageID: '',
     typingMessage: {},
+    // 是否在最底部
+    isScrollToBottom:false,
+    chatContainerHeight:0,
+    // 修改的群资料
+    newGroupProfile: {}
   },
 
   lifetimes: {
@@ -208,8 +222,17 @@ Component({
         UseData: value,
       });
       value.data.forEach((item) => {
-        if (item.conversationID !== this.data.conversation.conversationID) {
-          return;
+        switch(item.type) {
+          // 群提示消息
+          case 'TIMGroupTipElem':
+            this.handleGroupTipMessage(item);
+            break;
+          // 群系统消息
+          case 'TIMGroupSystemNoticeElem':
+            this.handleGroupSystemNoticeMessage(item);
+            break;
+          default:
+            break;
         }
         // 判断收到的消息是否是正在输入状态消息。由于正在输入状态消息是自定义消息，需要对自定义消息进行一个过滤，是自定义消息但不是正在输入状态消息，则新消息未读数加1，不是自定义消息则新消息未读数直接加1
         if (this.data.messageList.length > 12 && !message.isRead) {
@@ -221,15 +244,26 @@ Component({
           } catch (error) {
           }
           if ((item.type === MESSAGE_TYPE_TEXT.TIM_CUSTOM_ELEM && this.data.typingMessage.businessID !== BUSINESS_ID_TEXT.USER_TYPING) || item.type !== MESSAGE_TYPE_TEXT.TIM_CUSTOM_ELEM) {
-            this.data.showNewMessageCount.push(message);
+            this.data.newMessageCount.push(message);
             this.setData({
-              showNewMessageCount: this.data.showNewMessageCount,
-              showDownJump: true,
+              newMessageCount: this.data.newMessageCount,
             });
+            // 当滚轮在最底部的时候
+            if(this.data.isScrollToBottom) {
+              // 跳转到最新的消息
+              setTimeout(() => {
+                this.handleJumpNewMessage();
+              },300)
+            } else {
+              // 不在最底部的时候弹出未读消息
+              this.setData({
+                showUnreadMessageCount: true,
+              });
+            }
           }
         } else {
           this.setData({
-            showDownJump: false,
+            showUnreadMessageCount: false,
           });
         }
       });
@@ -256,11 +290,11 @@ Component({
       this.data.messageList = this.data.messageList.concat(list);
       this.setData({
         messageList: this.data.messageList,
-        groupOptionsNumber: this.data.messageList.slice(-1)[0].payload.operationType,
       });
       if (this.data.conversation.type === 'GROUP') {
+        const groupOperationType = this.data.messageList.slice(-1)[0].payload?.operationType || 0; 
         this.triggerEvent('changeMemberCount', {
-          groupOptionsNumber: this.data.messageList.slice(-1)[0].payload.operationType,
+          groupOperationType
         });
       }
     },
@@ -295,6 +329,29 @@ Component({
         });
       });
     },
+
+    handleGroupTipMessage(msg) {
+      // 群资料改变
+      if(msg.payload.operationType === 6) {
+        const newGroupProfile = msg.payload.newGroupProfile;
+        this.setData({
+          newGroupProfile: newGroupProfile
+        });
+        this.triggerEvent('handleNewGroupProfile',this.data.newGroupProfile);
+      }
+    },
+
+    handleGroupSystemNoticeMessage(msg) {
+      // 被群主踢出群组
+      if(msg.payload.operationType === 4) {
+        // 跳转到聊天列表页面
+        wx.navigateTo({
+          url: '../../../../../../TUI-CustomerService/pages/index',
+        });
+        this.showToast(`您已被${msg.payload.operatorID}踢出群组！`);
+      }
+    },
+
     // 兼容 scrollView
     filterSystemMessageID(messageID) {
       const index = messageID.indexOf('@TIM#');
@@ -425,8 +482,8 @@ Component({
     handleJumpNewMessage() {
       this.setData({
         jumpAim: `ID-${this.filterSystemMessageID(this.data.messageList[this.data.messageList.length - 1].ID)}`,
-        showDownJump: false,
-        showNewMessageCount: [],
+        showUnreadMessageCount: false,
+        newMessageCount: [],
       });
     },
     // 消息跳转到最近未读
@@ -449,7 +506,7 @@ Component({
     scrollHandler() {
       this.setData({
         jumpAim: `ID-${this.filterSystemMessageID(this.data.messageList[this.data.messageList.length - 1].ID)}`,
-        showDownJump: false,
+        showUnreadMessageCount: false,
       });
     },
     // 删除处理掉的群通知消息
@@ -516,27 +573,10 @@ Component({
         errorMessageID: event.detail.message.ID,
       });
       const errorCode = event.detail.showErrorImageFlag;
-      const { MESSAGE_ERROR_CODE, TOAST_TITLE_TEXT } = constant;
-      switch (errorCode) {
-        case MESSAGE_ERROR_CODE.DIRTY_WORDS:
-          this.showToast(TOAST_TITLE_TEXT.DIRTY_WORDS);
-          break;
-        case MESSAGE_ERROR_CODE.UPLOAD_FAIL:
-          this.showToast(TOAST_TITLE_TEXT.UPLOAD_FAIL);
-          break;
-        case MESSAGE_ERROR_CODE.REQUESTOR_TIME || MESSAGE_ERROR_CODE.DISCONNECT_NETWORK:
-          this.showToast(TOAST_TITLE_TEXT.CONNECT_ERROR);
-          break;
-        case MESSAGE_ERROR_CODE.DIRTY_MEDIA:
-          this.showToast(TOAST_TITLE_TEXT.DIRTY_MEDIA);
-          break;
-        default:
-          break;
-      }
+      this.handleErrorCode(errorCode);
     },
     // 消息发送失败后重新发送
     ResendMessage() {
-      const { MESSAGE_ERROR_CODE, TOAST_TITLE_TEXT } = constant;
       wx.showModal({
         content: '确认重发该消息？',
         success: (res) => {
@@ -551,27 +591,43 @@ Component({
               });
             })
             .catch((imError) => {
-              switch (imError.code) {
-                case MESSAGE_ERROR_CODE.DIRTY_WORDS:
-                  this.showToast(TOAST_TITLE_TEXT.DIRTY_WORDS);
-                  break;
-                case MESSAGE_ERROR_CODE.UPLOAD_FAIL:
-                  this.showToast(TOAST_TITLE_TEXT.UPLOAD_FAIL);
-                  break;
-                case MESSAGE_ERROR_CODE.REQUESTOR_TIME || MESSAGE_ERROR_CODE.DISCONNECT_NETWORK:
-                  this.showToast(TOAST_TITLE_TEXT.CONNECT_ERROR);
-                  break;
-                case MESSAGE_ERROR_CODE.DIRTY_MEDIA:
-                  this.showToast(TOAST_TITLE_TEXT.DIRTY_MEDIA);
-                  break;
-                default:
-                  break;
-              }
+              this.handleErrorCode(imError.code);
             });
         },
       });
     },
-
+    // 处理错误码信息
+    handleErrorCode(errorCode) {
+      const { MESSAGE_ERROR_CODE, TOAST_TITLE_TEXT } = constant;
+      switch (errorCode) {
+        case MESSAGE_ERROR_CODE.DIRTY_WORDS:
+          this.showToast(TOAST_TITLE_TEXT.DIRTY_WORDS);
+          break;
+        case MESSAGE_ERROR_CODE.UPLOAD_FAIL:
+          this.showToast(TOAST_TITLE_TEXT.UPLOAD_FAIL);
+          break;
+        case MESSAGE_ERROR_CODE.REQUESTOR_TIME || MESSAGE_ERROR_CODE.DISCONNECT_NETWORK:
+          this.showToast(TOAST_TITLE_TEXT.CONNECT_ERROR);
+          break;
+        case MESSAGE_ERROR_CODE.DIRTY_MEDIA:
+          this.showToast(TOAST_TITLE_TEXT.DIRTY_MEDIA);
+          break;
+        case MESSAGE_ERROR_CODE.UNUPLOADED_PICTURE:
+          this.showToast(TOAST_TITLE_TEXT.UNUPLOADED_PICTURE);
+          break;
+        case MESSAGE_ERROR_CODE.UNUPLOADED_MEDIA:
+          this.showToast(TOAST_TITLE_TEXT.UNUPLOADED_MEDIA);
+          break;
+        case MESSAGE_ERROR_CODE.BLACKLIST_MEMBER:
+          this.showToast(TOAST_TITLE_TEXT.BLACKLIST_MEMBER);
+          break;
+        case MESSAGE_ERROR_CODE.NOT_GROUP_MEMBER:
+          this.showToast(TOAST_TITLE_TEXT.NOT_GROUP_MEMBER);
+          break;
+        default:
+          break;
+      }
+    },
     showToast(toastTitle) {
       if (this.data.showMessageError) {
         wx.showToast({
@@ -602,6 +658,16 @@ Component({
         });
       }
     },
+    onScroll(event) {
+      let isScrollToBottom = false;
+      // 滚动条在底部
+      if(event.detail.scrollHeight - (event.detail.scrollTop + this.data.chatContainerHeight) <= 0) {
+        isScrollToBottom = true;
+      }
+      this.setData({
+        isScrollToBottom
+      })
+    }
   },
 
 });

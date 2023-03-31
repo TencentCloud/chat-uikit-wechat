@@ -1,5 +1,3 @@
-import logger from './logger'
-
 // -----------------检测类型工具函数-----------------
 /**
  * 检测input类型是否为数组或者object
@@ -7,7 +5,7 @@ import logger from './logger'
  * @returns {Boolean} true->input is an array or an object
  */
 export const isArrayOrObject = function (input) {
-  return isArray(input) || isObject(input)
+  return Array.isArray(input) || isObject(input)
 }
 /**
  * 检测input是否为Error的实例
@@ -17,6 +15,29 @@ export const isArrayOrObject = function (input) {
 export const isInstanceOfError = function (input) {
   return (input instanceof Error)
 }
+
+/**
+ * isObject: 没有标准定义，一般认为通过 {} 或者 new Object() 或者 Object.create(null) 方式创建的对象是纯粹对象
+ * @param {*} input 任意类型的输入
+ * @returns {Boolean} true->an object and only an object
+ */
+const isObject = function(input) {
+  if (typeof input !== 'object' || input === null) {
+    return false;
+  }
+
+  const proto = Object.getPrototypeOf(input);
+  if (proto === null) { // edge case Object.create(null)
+    return true;
+  }
+
+  let baseProto = proto;
+  while (Object.getPrototypeOf(baseProto) !== null) {
+    baseProto = Object.getPrototypeOf(baseProto);
+  }
+  // 2. 原型链第一个和最后一个比较
+  return proto === baseProto;
+};
 
 
 // -----------------获取时间工具函数，计算耗时用-----------------

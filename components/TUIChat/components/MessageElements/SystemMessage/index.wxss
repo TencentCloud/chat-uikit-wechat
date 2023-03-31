@@ -11,9 +11,7 @@
   border: 1px solid #abdcff;
   background-color: #f0faff;
   border-radius: 12px;
-}
-.time {
-
+  word-break: break-all;
 }
 .button{
   color: blue;
