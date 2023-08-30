@@ -139,12 +139,6 @@ Component({
         content: '确认删除会话？',
         success: (res) => {
           if (res.confirm) {
-            wx.aegis.reportEvent({
-              name: 'conversationOptions',
-              ext1: 'conversation-delete',
-              ext2: wx.$chat_reportType,
-              ext3: wx.$chat_SDKAppID,
-            });
             wx.$TUIKit.deleteConversation(this.data.conversation.conversationID);
             this.setData({
               conversation: {},
@@ -156,12 +150,6 @@ Component({
     },
     // 消息置顶
     pinConversation() {
-      wx.aegis.reportEvent({
-        name: 'conversationOptions',
-        ext1: 'conversation-top',
-        ext2: wx.$chat_reportType,
-        ext3: wx.$chat_SDKAppID,
-      });
       wx.$TUIKit.pinConversation({ conversationID: this.data.conversation.conversationID, isPinned: true })
         .then(() => {
           this.setData({
@@ -197,12 +185,7 @@ Component({
     },
     // 消息免打扰
     muteNotifications() {
-      wx.aegis.reportEvent({
-        name: 'conversationOptions',
-        ext1: 'conversation-mutenotifications',
-        ext2: wx.$chat_reportType,
-        ext3: wx.$chat_SDKAppID,
-      });
+
       let newShowMute = '';
       let newShowMuteIcon = false;
       let messageRemindType = wx.$TUIKitTIM.TYPES.MSG_REMIND_ACPT_NOT_NOTE;

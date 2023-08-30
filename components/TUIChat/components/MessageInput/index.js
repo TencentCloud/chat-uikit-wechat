@@ -125,14 +125,38 @@ Component({
       });
     },
 
-    // 长按录音
-    handleLongPress(e) {
-      wx.aegis.reportEvent({
-        name: 'messageType',
-        ext1: 'messageType-audio',
-        ext2: wx.$chat_reportType,
-        ext3: wx.$chat_SDKAppID,
+    handleTouchStart() {
+      wx.getSetting({
+        success: async (res) => {
+          const isRecord = res.authSetting['scope.record'];
+          // 首次获取权限时, isRecord === undefine， 需使用 this.recorderManager 内置调用权限功能
+          // 当 isRecord === false 时，表示首次未授权，不会触发 this.recorderManager 内置调用权限功能
+          // 此时需要走 wx.authorize 授权，失败指引用户自己在设置中开启
+          if (isRecord === false) {
+            const title = '麦克风权限授权';
+            const content = '发送语音消息，需要在设置中对麦克风进行授权允许';
+            wx.authorize({ 
+              scope: 'scope.record',
+              success: () => {
+                this.recorderStart();
+              },
+              fail: () => {
+                this.handleShowModal(title, content);
+                wx.hideLoading();
+                this.setData({
+                  text: '按住说话',
+                  isRecording: false,
+                });
+              }
+            });
+          } else {
+            this.recorderStart();
+          }
+        },
       });
+    },
+
+    recorderStart() {
       this.recorderManager.start({
         duration: 60000, // 录音的时长，单位 ms，最大值 600000（10 分钟）
         sampleRate: 44100, // 采样率
@@ -140,11 +164,13 @@ Component({
         encodeBitRate: 192000, // 编码码率
         format: 'aac', // 音频格式，选择此格式创建的音频消息，可以在即时通信 IM 全平台（Android、iOS、微信小程序和Web）互通
       });
+    },
+
+    // 长按录音
+    handleLongPress(e) {
       this.setData({
         startPoint: e.touches[0],
         title: '正在录音',
-        // isRecording : true,
-        // canSend: true,
         notShow: true,
         isShow: false,
         isRecording: true,
@@ -174,6 +200,8 @@ Component({
             canSend: true,
           });
         }
+      } else {
+
       }
     },
 
@@ -182,7 +210,6 @@ Component({
       this.setData({
         isRecording: false,
         popupToggle: false,
-
       });
       wx.hideLoading();
       this.recorderManager.stop();
@@ -203,12 +230,6 @@ Component({
 
     // 选自定义消息
     handleExtensions() {
-      wx.aegis.reportEvent({
-        name: 'chooseExtensions',
-        ext1: 'chooseExtensions',
-        ext2: wx.$chat_reportType,
-        ext3: wx.$chat_SDKAppID,
-      });
       let targetFlag = 'extension';
       if (this.data.displayFlag === 'extension') {
         targetFlag = '';
@@ -227,12 +248,6 @@ Component({
     },
 
     handleSendImage() {
-      wx.aegis.reportEvent({
-        name: 'messageType',
-        ext1: 'messageType-image',
-        ext2: wx.$chat_reportType,
-        ext3: wx.$chat_SDKAppID,
-      });
       this.sendMediaMessage('album', 'image');
     },
 
@@ -295,12 +310,6 @@ Component({
     },
 
     handleSendVideo() {
-      wx.aegis.reportEvent({
-        name: 'messageType',
-        ext1: 'messageType-video',
-        ext2: wx.$chat_reportType,
-        ext3: wx.$chat_SDKAppID,
-      });
       this.sendMediaMessage('album', 'video');
     },
 
@@ -385,6 +394,7 @@ Component({
         },
       });
     },
+    
     handleShowModal(title, content) {
       wx.showModal({
         title,
@@ -409,21 +419,6 @@ Component({
       const type = e.currentTarget.dataset.value;
       const conversationType = this.data.conversation.type;
       if (conversationType === wx.$TUIKitTIM.TYPES.CONV_GROUP) {
-        if (type === 1) {
-          wx.aegis.reportEvent({
-            name: 'audioCall',
-            ext1: 'audioCall-group',
-            ext2: wx.$chat_reportType,
-            ext3: wx.$chat_SDKAppID,
-          });
-        } else if (type === 2) {
-          wx.aegis.reportEvent({
-            name: 'videoCall',
-            ext1: 'videoCall-group',
-            ext2: wx.$chat_reportType,
-            ext3: wx.$chat_SDKAppID,
-          });
-        }
         this.triggerEvent('handleCall', {
           type,
           conversationType,
@@ -431,21 +426,6 @@ Component({
       }
       if (conversationType === wx.$TUIKitTIM.TYPES.CONV_C2C) {
         const { userID } = this.data.conversation.userProfile;
-        if (type === 1) {
-          wx.aegis.reportEvent({
-            name: 'audioCall',
-            ext1: 'audioCall-1v1',
-            ext2: wx.$chat_reportType,
-            ext3: wx.$chat_SDKAppID,
-          });
-        } else if (type === 2) {
-          wx.aegis.reportEvent({
-            name: 'videoCall',
-            ext1: 'videoCall-1v1',
-            ext2: wx.$chat_reportType,
-            ext3: wx.$chat_SDKAppID,
-          });
-        }
         this.triggerEvent('handleCall', {
           conversationType,
           type,
@@ -458,12 +438,6 @@ Component({
     },
 
     sendTextMessage(msg, flag) {
-      wx.aegis.reportEvent({
-        name: 'messageType',
-        ext1: 'messageType-text',
-        ext2: wx.$chat_reportType,
-        ext3: wx.$chat_SDKAppID,
-      });
       const to = this.getToAccount();
       const text = flag ? msg : this.data.message;
       const { FEAT_NATIVE_CODE } = constant;
@@ -612,12 +586,6 @@ Component({
     },
 
     $handleSendCustomMessage(e) {
-      wx.aegis.reportEvent({
-        name: 'messageType',
-        ext1: 'messageType-custom',
-        ext2: wx.$chat_reportType,
-        ext3: wx.$chat_SDKAppID,
-      });
       const message = wx.$TUIKit.createCustomMessage({
         to: this.getToAccount(),
         conversationType: this.data.conversation.type,
@@ -666,25 +634,8 @@ Component({
         offlinePushInfo: {
           disablePush: true,
         },
-      }).then(() => {
-        const firstSendMessage = wx.getStorageSync('isFirstSendMessage');
-        if (firstSendMessage) {
-          wx.aegis.reportEvent({
-            name: 'sendMessage',
-            ext1: 'sendMessage-success',
-            ext2: 'imTuikitExternal',
-            ext3: wx.$chat_SDKAppID,
-          });
-        }
-      })
-        .catch((error) => {
+      }).catch((error) => {
           logger.log(`| TUI-chat | message-input | sendMessageError: ${error.code} `);
-          wx.aegis.reportEvent({
-            name: 'sendMessage',
-            ext1: `sendMessage-failed#error: ${error}`,
-            ext2: 'imTuikitExternal',
-            ext3: wx.$chat_SDKAppID,
-          });
           this.triggerEvent('showMessageErrorImage', {
             showErrorImageFlag: error.code,
             message,

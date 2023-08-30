@@ -58,12 +58,6 @@ Component({
     },
     // 确认加入
     bindConfirmJoin() {
-      wx.aegis.reportEvent({
-        name: 'conversationType',
-        ext1: 'conversationType-join',
-        ext2: wx.$chat_reportType,
-        ext3: wx.$chat_SDKAppID,
-      });
       logger.log(`| TUI-Group | join-group | bindConfirmJoin | groupID: ${this.data.groupID}`);
       wx.$TUIKit.joinGroup({ groupID: this.data.groupID, type: this.data.searchGroup.type })
         .then((imResponse) => {
