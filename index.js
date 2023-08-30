@@ -1,5 +1,4 @@
 // TUIKitWChat/Chat/index.js
-import Aegis from 'aegis-mp-sdk';
 import constant from './utils/constant';
 const app = getApp();
 Component({
@@ -7,7 +6,16 @@ Component({
    * 组件的属性列表
    */
   properties: {
-
+    conversationID: {
+      type: String,
+      value: '',
+      observer(conversationID) {
+        this.setData({
+          outsideConversation: true,
+          currentConversationID: conversationID,
+        });
+      },
+    },  
   },
 
   /**
@@ -15,7 +23,7 @@ Component({
    */
   data: {
     isShowConversation: false,
-    isShowConversationList: true,
+    isShowConversationList: false,
     currentConversationID: '',
     unreadCount: 0,
     hasCallKit: false,
@@ -26,6 +34,7 @@ Component({
       tim: null,
       SDKAppID: 0,
     },
+    outsideConversation: false,
   },
 
   /**
@@ -46,12 +55,6 @@ Component({
         // 当 isExitInit 为 true 时，进行 callkit 初始化和日志上报
         const isExitInit = (this.TUICallKit.init !== undefined);
         if (this.TUICallKit !== null && isExitInit) {
-          wx.aegis.reportEvent({
-            name: 'TUICallKit',
-            ext1: 'TUICallKitInit',
-            ext2: wx.$chat_reportType,
-            ext3: wx.$chat_SDKAppID,
-          });
           this.TUICallKit.init();
           wx.setStorageSync('_isTIMCallKit', true);
           wx.$_isTIMCallKit = '_isTIMCallKit';
@@ -60,26 +63,21 @@ Component({
           });
         }
       });
-      const TUIConversation = this.selectComponent('#TUIConversation');
-      TUIConversation.init();
-      if (!app.globalData || app.globalData.reportType !== constant.OPERATING_ENVIRONMENT) {
-        this.aegisInit();
+      if (this.data.outsideConversation) {
+        this.currentConversationID({
+          detail: {
+            currentConversationID: this.data.currentConversationID,
+            unreadCount: 0
+          }
+        })
+      } else {
+        this.setData({
+          isShowConversationList: true,
+        }, () => {
+          const TUIConversation = this.selectComponent('#TUIConversation');
+          TUIConversation.init();
+        })
       }
-      wx.$chat_reportType = 'chat-uikit-wechat';
-      wx.aegis.reportEvent({
-        name: 'time',
-        ext1: 'first-run-time',
-        ext2: wx.$chat_reportType,
-        ext3: wx.$chat_SDKAppID,
-      });
-    },
-    aegisInit() {
-      wx.aegis = new Aegis({
-        id: 'iHWefAYquFxvklBblC', // 项目key
-        reportApiSpeed: true, // 接口测速
-        reportAssetSpeed: true, // 静态资源测速
-        pagePerformance: true, // 开启页面测速
-      });
     },
     currentConversationID(event) {
       this.setData({
@@ -93,19 +91,34 @@ Component({
       });
     },
     showConversationList() {
-      this.setData({
-        isShowConversation: false,
-        isShowConversationList: true,
-      }, () => {
-        const TUIConversation = this.selectComponent('#TUIConversation');
-        TUIConversation.init();
-      });
+      if (this.data.outsideConversation) {
+        this.handleBack();
+      } else {
+        this.setData({
+          isShowConversation: false,
+          isShowConversationList: true,
+        }, () => {
+          const TUIConversation = this.selectComponent('#TUIConversation');
+          TUIConversation.init();
+        });
+      }
     },
     handleCall(event) {
       if (event.detail.groupID) {
         this.TUICallKit.groupCall(event.detail);
       } else {
         this.TUICallKit.call(event.detail);
+      }
+    },
+    handleBack() {
+      if (app?.globalData?.reportType !== constant.OPERATING_ENVIRONMENT) {
+        wx.navigateBack({
+          delta: 1,
+        });
+      } else {
+        wx.switchTab({
+          url: '/pages/TUI-Index/index',
+        });
       }
     },
     sendMessage(event) {

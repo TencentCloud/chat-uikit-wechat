@@ -1,4 +1,19 @@
 <!--TUIKitWChat/Chat/index.wxml-->
-<TUIConversation id="TUIConversation" wx:if="{{isShowConversationList}}"  bind:currentConversationID="currentConversationID" bind:currentGroupID="currentGroupID"></TUIConversation>
-<TUIChat id="TUIChat" wx:if="{{isShowConversation}}" currentConversationID="{{currentConversationID}}"  unreadCount="{{unreadCount}}" hasCallKit="{{hasCallKit}}"bind:showConversationList="showConversationList" bind:handleCall="handleCall"></TUIChat>
-<TUICallKit class="calling" id="TUICallKit" config="{{config}}"  bind:sendMessage="sendMessage"></TUICallKit>
+<TUIConversation
+  id="TUIConversation"
+  wx:if="{{isShowConversationList}}"
+  bind:currentConversationID="currentConversationID"
+  bind:currentGroupID="currentGroupID"></TUIConversation>
+<TUIChat
+  id="TUIChat"
+  wx:if="{{isShowConversation}}"
+  currentConversationID="{{currentConversationID}}"
+  unreadCount="{{unreadCount}}"
+  hasCallKit="{{hasCallKit}}"
+  bind:showConversationList="showConversationList"
+  bind:handleCall="handleCall"></TUIChat>
+<TUICallKit
+  class="calling"
+  id="TUICallKit"
+  config="{{config}}"
+  bind:sendMessage="sendMessage"></TUICallKit>

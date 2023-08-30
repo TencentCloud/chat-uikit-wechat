@@ -55,12 +55,6 @@ Component({
     // 确认邀请
     bindConfirmInvite() {
       if (this.data.searchUser.isChoose) {
-        wx.aegis.reportEvent({
-          name: 'conversationType',
-          ext1: 'conversationType-c2c',
-          ext2: wx.$chat_reportType,
-          ext3: wx.$chat_SDKAppID,
-        });
         this.triggerEvent('searchUserID', { searchUserID: `C2C${this.data.searchUser.userID}` });
       } else {
         wx.showToast({
