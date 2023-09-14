@@ -136,15 +136,9 @@ Component({
     // 删除会话
     deleteConversation() {
       wx.showModal({
-        content: '确认删除会话？',
+        content: '删除聊天后，将同时删除聊天记录，包括聊天中的文件、图片、视频等内容。',
         success: (res) => {
           if (res.confirm) {
-            wx.aegis.reportEvent({
-              name: 'conversationOptions',
-              ext1: 'conversation-delete',
-              ext2: wx.$chat_reportType,
-              ext3: wx.$chat_SDKAppID,
-            });
             wx.$TUIKit.deleteConversation(this.data.conversation.conversationID);
             this.setData({
               conversation: {},
@@ -156,12 +150,6 @@ Component({
     },
     // 消息置顶
     pinConversation() {
-      wx.aegis.reportEvent({
-        name: 'conversationOptions',
-        ext1: 'conversation-top',
-        ext2: wx.$chat_reportType,
-        ext3: wx.$chat_SDKAppID,
-      });
       wx.$TUIKit.pinConversation({ conversationID: this.data.conversation.conversationID, isPinned: true })
         .then(() => {
           this.setData({
@@ -197,24 +185,19 @@ Component({
     },
     // 消息免打扰
     muteNotifications() {
-      wx.aegis.reportEvent({
-        name: 'conversationOptions',
-        ext1: 'conversation-mutenotifications',
-        ext2: wx.$chat_reportType,
-        ext3: wx.$chat_SDKAppID,
-      });
+
       let newShowMute = '';
       let newShowMuteIcon = false;
-      let messageRemindType = wx.$TUIKitTIM.TYPES.MSG_REMIND_ACPT_NOT_NOTE;
+      let messageRemindType = wx.TencentCloudChat.TYPES.MSG_REMIND_ACPT_NOT_NOTE;
       if (this.data.showMute === '消息免打扰') {
         newShowMute = '取消免打扰';
         newShowMuteIcon = true;
-        messageRemindType = wx.$TUIKitTIM.TYPES.MSG_REMIND_ACPT_NOT_NOTE;
+        messageRemindType = wx.TencentCloudChat.TYPES.MSG_REMIND_ACPT_NOT_NOTE;
       }
       if (this.data.showMute === '取消免打扰') {
         newShowMute = '消息免打扰';
         newShowMuteIcon = false;
-        messageRemindType = wx.$TUIKitTIM.TYPES.MSG_REMIND_ACPT_AND_NOTE;
+        messageRemindType = wx.TencentCloudChat.TYPES.MSG_REMIND_ACPT_AND_NOTE;
       }
 
       if (this.data.conversation.type === 'C2C') {
@@ -325,7 +308,7 @@ Component({
           getStatus: true,
         });
       }
-      if (conversation.type !== wx.$TUIKitTIM.TYPES.CONV_C2C) return;
+      if (conversation.type !== wx.TencentCloudChat.TYPES.CONV_C2C) return;
       statusList.forEach((item) => {
         if (item.userID !== conversation.userProfile.userID) return;
         const showStatus = (item.statusType === 1);

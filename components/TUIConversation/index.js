@@ -5,18 +5,6 @@ const app = getApp();
 
 Component({
   /**
-   * 组件的属性列表
-   */
-  properties: {
-    config: {
-      type: Object,
-      value: {},
-      observer(config) {
-      },
-    },
-  },
-
-  /**
    * 组件的初始数据
    */
   data: {
@@ -41,13 +29,17 @@ Component({
     showJoinGroup: false,
     handleChangeStatus: false,
     storageList: [],
+    showConversation: false,
+    isInit: false,
+    isExistNav: false
   },
   lifetimes: {
-    attached() {
-    },
     detached() {
-      wx.$TUIKit.off(wx.$TUIKitTIM.EVENT.CONVERSATION_LIST_UPDATED, this.onConversationListUpdated, this);
-      wx.$TUIKit.off(wx.$TUIKitTIM.EVENT.USER_STATUS_UPDATED, this.onUserStatusUpdate, this);
+      wx.$TUIKit.off(wx.TencentCloudChat.EVENT.CONVERSATION_LIST_UPDATED, this.onConversationListUpdated, this);
+      wx.$TUIKit.off(wx.TencentCloudChat.EVENT.USER_STATUS_UPDATED, this.onUserStatusUpdate, this);
+      this.setData({
+        isInit: false,
+      })
     },
   },
 
@@ -56,9 +48,33 @@ Component({
    */
   methods: {
     init() {
-      wx.$TUIKit.on(wx.$TUIKitTIM.EVENT.CONVERSATION_LIST_UPDATED, this.onConversationListUpdated, this);
-      wx.$TUIKit.on(wx.$TUIKitTIM.EVENT.USER_STATUS_UPDATED, this.onUserStatusUpdate, this);
-      this.getConversationList();
+      this.initEvent();
+      this.setData({
+        showConversation: true,
+      })
+      this.initUserStatus();
+      this.setBackIcon();
+    },
+
+    destroy() {
+      this.setData({
+        showConversation: false,
+        isExistNav: false,
+      })
+    },
+
+    initEvent() {
+      if (!this.data.isInit) {
+        wx.$TUIKit.on(wx.TencentCloudChat.EVENT.CONVERSATION_LIST_UPDATED, this.onConversationListUpdated, this);
+        wx.$TUIKit.on(wx.TencentCloudChat.EVENT.USER_STATUS_UPDATED, this.onUserStatusUpdate, this);
+        this.getConversationList();
+        this.setData({
+          isInit: true,
+        })
+      }
+    },
+
+    initUserStatus() {
       wx.getStorageInfo({
         success(res) {
           wx.setStorage({
@@ -75,11 +91,21 @@ Component({
         }
       });
     },
+
+    setBackIcon() {
+      const pages = getCurrentPages();
+      const prevPages = pages[pages.length - 2];
+      
+      if (prevPages && prevPages.route) {
+        this.setData({
+          isExistNav: true,
+        })
+      }
+    },
+
     goBack() {
-      if (app?.globalData?.reportType !== constant.OPERATING_ENVIRONMENT) {
-        wx.navigateBack({
-          delta: 1,
-        });
+      if (app.globalData && app.globalData.reportType !== constant.OPERATING_ENVIRONMENT) {
+        wx.navigateBack();
       } else {
         wx.switchTab({
           url: '/pages/TUI-Index/index',
@@ -88,10 +114,39 @@ Component({
     },
     // 更新会话列表
     onConversationListUpdated(event) {
+      this.handleConversationList(event.data);
+    },
+    getConversationList() {
+      if (this.data.conversationList.length === 0) {
+        wx.$TUIKit.getConversationList().then((imResponse) => {
+          this.handleConversationList(imResponse.data.conversationList);
+        })
+      }
+    },
+    handleConversationList(conversationList) {
       this.setData({
-        conversationList: event.data,
+        conversationList,
       });
-      this.filterUserIDList(event.data);
+      this.filterUserIDList(conversationList);
+    },
+    // 过滤会话列表，找出C2C会话，以及需要订阅状态的userIDList
+    filterUserIDList(conversationList) {
+      if (conversationList.length === 0) return;
+      const userIDList = [];
+      conversationList.forEach((element) => {
+        if (element.type === wx.TencentCloudChat.TYPES.CONV_C2C) {
+          userIDList.push(element.userProfile.userID);
+        }
+      });
+      const currentUserID = wx.getStorageSync('currentUserID');
+      if (currentUserID.includes(wx.$chat_userID)) {
+        const currentStatus = wx.getStorageSync(wx.$chat_userID);
+        if (currentStatus) {
+          this.subscribeOnlineStatus(userIDList);
+        }
+      } else {
+        this.subscribeOnlineStatus(userIDList);
+      }
     },
     transCheckID(event) {
       this.setData({
@@ -111,14 +166,6 @@ Component({
         });
       });
     },
-    getConversationList() {
-      wx.$TUIKit.getConversationList().then((imResponse) => {
-        this.setData({
-          conversationList: imResponse.data.conversationList,
-        });
-        this.filterUserIDList(imResponse.data.conversationList);
-      });
-    },
     // 跳转到子组件需要的参数
     handleRoute(event) {
       const flagIndex = this.data.conversationList.findIndex(item => item.conversationID === event.currentTarget.id);
@@ -135,10 +182,6 @@ Component({
     },
     // 展示发起会话/发起群聊/加入群聊
     showSelectedTag() {
-      wx.aegis.reportEvent({
-        name: 'conversationType',
-        ext1: 'conversationType-all',
-      });
       this.setData({
         showSelectTag: !this.data.showSelectTag,
       });
@@ -177,7 +220,7 @@ Component({
         showSelectTag: false,
       });
     },
-    showConversation(event) {
+    toggleConversationList() {
       this.setData({
         showConversationList: true,
         showCreateConversation: false,
@@ -220,33 +263,14 @@ Component({
         });
       })
         .catch((imError) => {
-          console.warn('开启在线状态功能，需要您开通旗舰版套餐：https://buy.cloud.tencent.com/avc'); // 获取用户状态失败的相关信息
+          console.warn('开启在线状态功能,' + '\n'
+          + '1. 需要您开通旗舰版套餐：https://buy.cloud.tencent.com/avc ;' + '\n'
+          + '2. 进入 IM 控制台开启“用户状态查询及状态变更通知”开关: https://console.cloud.tencent.com/im/login-message');
         });
       wx.$TUIKit.subscribeUserStatus({ userIDList });
     },
-
-    // 过滤会话列表，找出C2C会话，以及需要订阅状态的userIDList
-    filterUserIDList(conversationList) {
-      if (conversationList.length === 0) return;
-      const userIDList = [];
-      conversationList.forEach((element) => {
-        if (element.type === wx.$TUIKitTIM.TYPES.CONV_C2C) {
-          userIDList.push(element.userProfile.userID);
-        }
-      });
-      const currentUserID = wx.getStorageSync('currentUserID');
-      if (currentUserID.includes(wx.$chat_userID)) {
-        const currentStatus = wx.getStorageSync(wx.$chat_userID);
-        if (currentStatus) {
-          this.subscribeOnlineStatus(userIDList);
-        }
-      } else {
-        this.subscribeOnlineStatus(userIDList);
-      }
-    },
-
     learnMore() {
-      if (app?.globalData?.reportType !== constant.OPERATING_ENVIRONMENT) return;
+      if (app.globalData && app.globalData.reportType !== constant.OPERATING_ENVIRONMENT) return;
       wx.navigateTo({
         url: '/pages/TUI-User-Center/webview/webview?url=https://cloud.tencent.com/product/im',
       });

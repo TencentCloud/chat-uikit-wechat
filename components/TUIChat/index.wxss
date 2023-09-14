@@ -1,8 +1,28 @@
 .container {
   width: 100vw;
   height: 100vh;
+  position: absolute;
+  z-index: 1;
+  top: 0;
+  left: 0;
   background-color: #F4F5F9;
 }
+
+.enter {
+  transform: translate3d(0,0,0);
+  transform-origin: right;
+  animation: pageEnter .3s ease-in-out;
+}
+
+@keyframes pageEnter {
+  0%{
+    transform:translate(100%, 0);
+  }
+  100% {
+    transform:translate(0, 0);
+  }
+}
+
 .safetytips-box{
   background: rgba(255, 149, 0, 0.1);
   padding: 9px;

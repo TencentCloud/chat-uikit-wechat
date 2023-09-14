@@ -53,7 +53,7 @@ Component({
 
   lifetimes: {
     attached() {
-      if (app?.globalData?.reportType === constant.OPERATING_ENVIRONMENT) {
+      if (app.globalData && app.globalData.reportType === constant.OPERATING_ENVIRONMENT) {
         this.setData({
           showTips: true,
         });
@@ -112,9 +112,9 @@ Component({
         this.setData({
           conversationName: this.getConversationName(conversation),
           conversation,
-          isShow: conversation.type === wx.$TUIKitTIM.TYPES.CONV_GROUP,
+          isShow: conversation.type === wx.TencentCloudChat.TYPES.CONV_GROUP,
         });
-        if (conversation.type !== wx.$TUIKitTIM.TYPES.CONV_GROUP) return;
+        if (conversation.type !== wx.TencentCloudChat.TYPES.CONV_GROUP) return;
         if (!this.data.showTips) {
           this.setData({
             showGroupTips: true,
@@ -133,10 +133,10 @@ Component({
         });
         return '系统通知';
       }
-      if (conversation.type === wx.$TUIKitTIM.TYPES.CONV_C2C) {
+      if (conversation.type === wx.TencentCloudChat.TYPES.CONV_C2C) {
         return conversation.remark || conversation.userProfile.nick || conversation.userProfile.userID;
       }
-      if (conversation.type === wx.$TUIKitTIM.TYPES.CONV_GROUP) {
+      if (conversation.type === wx.TencentCloudChat.TYPES.CONV_GROUP) {
         return conversation.groupProfile.name || conversation.groupProfile.groupID;
       }
     },
@@ -151,7 +151,7 @@ Component({
       this.selectComponent('#MessageInput').handleClose();
     },
     handleCall(event) {
-      if (event.detail.conversationType === wx.$TUIKitTIM.TYPES.CONV_GROUP) {
+      if (event.detail.conversationType === wx.TencentCloudChat.TYPES.CONV_GROUP) {
         this.selectComponent('#TUIGroup').callShowMoreMember(event);
       } else {
         this.triggerEvent('handleCall', event.detail);
@@ -192,7 +192,7 @@ Component({
     },
     typing(event) {
       const { STRING_TEXT, FEAT_NATIVE_CODE } = constant;
-      if (this.data.conversation.type === wx.$TUIKitTIM.TYPES.CONV_C2C) {
+      if (this.data.conversation.type === wx.TencentCloudChat.TYPES.CONV_C2C) {
         if (event.detail.typingMessage.typingStatus === FEAT_NATIVE_CODE.ISTYPING_STATUS && event.detail.typingMessage.actionParam === constant.TYPE_INPUT_STATUS_ING) {
           this.setData({
             conversationName: STRING_TEXT.TYPETYPING,
