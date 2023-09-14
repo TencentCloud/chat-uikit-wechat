@@ -19,9 +19,9 @@
   height: 80rpx;
 }
 .pop{
-    position: fixed;
+    position: absolute;
     width: 50%;
-    bottom: 400rpx;
+    bottom: -60%;
     margin-left: 90rpx;
     background: rgba(0, 0, 0, 0.3);
     z-index: 99999;

@@ -44,8 +44,6 @@ Component({
    * 组件的初始数据
    */
   data: {
-    avatar: '',
-    userID: '',
     isLostsOfUnread: false,
     unreadCount: '',
     conversation: {}, // 当前会话
@@ -113,20 +111,16 @@ Component({
           });
         }
       }
-      wx.$TUIKit.getMyProfile().then((res) => {
-        this.data.avatar = res.data.avatar;
-        this.data.userID = res.data.userID;
-      });
-      wx.$TUIKit.on(wx.$TUIKitTIM.EVENT.MESSAGE_RECEIVED, this.$onMessageReceived, this);
-      wx.$TUIKit.on(wx.$TUIKitTIM.EVENT.MESSAGE_READ_BY_PEER, this.$onMessageReadByPeer, this);
-      wx.$TUIKit.on(wx.$TUIKitTIM.EVENT.MESSAGE_REVOKED, this.$onMessageRevoked, this);
+      wx.$TUIKit.on(wx.TencentCloudChat.EVENT.MESSAGE_RECEIVED, this.$onMessageReceived, this);
+      wx.$TUIKit.on(wx.TencentCloudChat.EVENT.MESSAGE_READ_BY_PEER, this.$onMessageReadByPeer, this);
+      wx.$TUIKit.on(wx.TencentCloudChat.EVENT.MESSAGE_REVOKED, this.$onMessageRevoked, this);
     },
 
     detached() {
       // 一定要解除相关的事件绑定
-      wx.$TUIKit.off(wx.$TUIKitTIM.EVENT.MESSAGE_RECEIVED, this.$onMessageReceived);
-      wx.$TUIKit.off(wx.$TUIKitTIM.EVENT.MESSAGE_READ_BY_PEER, this.$onMessageReadByPeer);
-      wx.$TUIKit.off(wx.$TUIKitTIM.EVENT.MESSAGE_REVOKED, this.$onMessageRevoked);
+      wx.$TUIKit.off(wx.TencentCloudChat.EVENT.MESSAGE_RECEIVED, this.$onMessageReceived);
+      wx.$TUIKit.off(wx.TencentCloudChat.EVENT.MESSAGE_READ_BY_PEER, this.$onMessageReadByPeer);
+      wx.$TUIKit.off(wx.TencentCloudChat.EVENT.MESSAGE_REVOKED, this.$onMessageRevoked);
     },
   },
 
@@ -388,12 +382,6 @@ Component({
     },
     // 删除消息
     deleteMessage() {
-      wx.aegis.reportEvent({
-        name: 'messageOptions',
-        ext1: 'messageOptions-delete',
-        ext2: wx.$chat_reportType,
-        ext3: wx.$chat_SDKAppID,
-      });
       wx.$TUIKit.deleteMessage([this.data.selectedMessage])
         .then((imResponse) => {
           this.updateMessageByID(imResponse.data.messageList[0].ID);
@@ -413,12 +401,6 @@ Component({
     },
     // 撤回消息
     revokeMessage() {
-      wx.aegis.reportEvent({
-        name: 'messageOptions',
-        ext1: 'messageOptions-revoke',
-        ext2: wx.$chat_reportType,
-        ext3: wx.$chat_SDKAppID,
-      });
       wx.$TUIKit.revokeMessage(this.data.selectedMessage)
         .then((imResponse) => {
           this.setData({
@@ -458,12 +440,6 @@ Component({
     },
     // 复制消息
     copyMessage() {
-      wx.aegis.reportEvent({
-        name: 'messageOptions',
-        ext1: 'messageOptions-copy',
-        ext2: wx.$chat_reportType,
-        ext3: wx.$chat_SDKAppID,
-      });
       wx.setClipboardData({
         data: this.data.selectedMessage.payload.text,
         success() {
@@ -648,7 +624,7 @@ Component({
     },
     // 点击购买链接跳转
     handleJumpLink(e) {
-      if (app?.globalData?.reportType !== constant.OPERATING_ENVIRONMENT) return;
+      if (app.globalData && app.globalData.reportType !== constant.OPERATING_ENVIRONMENT) return;
       const { BUSINESS_ID_TEXT }  = constant;
       const dataLink = JSON.parse(e.currentTarget.dataset.value.payload.data);
       if (dataLink.businessID === BUSINESS_ID_TEXT.ORDER || dataLink.businessID === BUSINESS_ID_TEXT.LINK) {

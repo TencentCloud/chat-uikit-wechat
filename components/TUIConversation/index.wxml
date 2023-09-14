@@ -1,27 +1,29 @@
 <!--TUIKitWChat/Conversation/index.wxml-->
-<view  class="container" wx:if="{{showConversationList}}">
- <view   class="container">
-   <view class="tui-navigatorbar">
-     <image class="tui-navigatorbar-back" bindtap="goBack" src="../../static/assets/ic_back_white.svg" />
-     <view class="conversation-title">最近联系人</view>
-   </view>
-   <view class="conversation-list-area">
-     <scroll-view class="scoll-view" scroll-y="true">
-       <ConversationItem  wx:for="{{conversationList}}" wx:key="index" id="{{item.conversationID}}" data-type="{{item.type}}" conversation="{{item}}" bindtap="handleRoute" statusList="{{statusList}}" bind:transCheckID="transCheckID"  charge="{{transChenckID===item.conversationID}}">
-       </ConversationItem>
-     </scroll-view>
-   </view>
- </view>
-  <view wx:if="{{showSelectTag}}" class="conversation-bubble" catchtap="handleEditToggle">
-    <view class="picker" wx:for="{{array}}" wx:key="index" data-name="{{item.name}}" data-id="{{item.id}}" bindtap="handleOnTap">
-      {{item.name}}
+<view class="tui-conversation" hidden="{{!showConversation}}">
+  <view  class="container" wx:if="{{showConversationList}}">
+    <view class="container">
+      <view class="tui-navigatorbar">
+        <image wx:if="{{isExistNav}}" class="tui-navigatorbar-back" bindtap="goBack" src="../../static/assets/ic_back_white.svg" />
+        <view class="conversation-title">最近联系人</view>
+      </view>
+      <view class="conversation-list-area">
+        <scroll-view class="scoll-view" scroll-y="true" type="list" >
+          <ConversationItem  wx:for="{{conversationList}}" wx:key="index" id="{{item.conversationID}}" data-type="{{item.type}}" conversation="{{item}}" bindtap="handleRoute" statusList="{{statusList}}" bind:transCheckID="transCheckID"  charge="{{transChenckID===item.conversationID}}">
+          </ConversationItem>
+        </scroll-view>
+      </view>
+    </view>
+    <view wx:if="{{showSelectTag}}" class="conversation-bubble" catchtap="handleEditToggle">
+      <view class="picker" wx:for="{{array}}" wx:key="index" data-name="{{item.name}}" data-id="{{item.id}}" bindtap="handleOnTap">
+        {{item.name}}
+      </view>
+    </view>
+    <view class="bottom-area">
+      <image bindtap="showSelectedTag" class="btn-show-more" src="../../static/assets/add.svg" />
+      <view bindtap="learnMore" class="im-link">了解更多IM功能</view>
     </view>
   </view>
-  <view class="bottom-area">
-    <image bindtap="showSelectedTag" class="btn-show-more" src="../../static/assets/add.svg" />
-    <view bindtap="learnMore" class="im-link">了解更多IM功能</view>
-  </view>
+  <CreateConversation wx:if="{{showCreateConversation}}" bind:showConversation="toggleConversationList" bind:searchUserID="searchUserID" ></CreateConversation>
+  <CreateGroup wx:if="{{showCreateGroup}}" bind:showConversation="toggleConversationList" bind:createGroupID="createGroupID"></CreateGroup>
+  <JoinGroup wx:if="{{showJoinGroup}}" bind:searchGroupID="searchGroupID" bind:showConversation="toggleConversationList"></JoinGroup>
 </view>
-<CreateConversation wx:if="{{showCreateConversation}}" bind:showConversation="showConversation" bind:searchUserID="searchUserID" ></CreateConversation>
-<CreateGroup wx:if="{{showCreateGroup}}" bind:showConversation="showConversation" bind:createGroupID="createGroupID"></CreateGroup>
-<JoinGroup wx:if="{{showJoinGroup}}" bind:searchGroupID="searchGroupID" bind:showConversation="showConversation"></JoinGroup>

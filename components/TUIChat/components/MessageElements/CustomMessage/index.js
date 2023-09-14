@@ -139,7 +139,7 @@ Component({
       try {
         const callingmessage = JSON.parse(message.payload.data);
         if (callingmessage.businessID === 1) {
-          if (message.conversationType === wx.$TUIKitTIM.TYPES.CONV_GROUP) {
+          if (message.conversationType === wx.TencentCloudChat.TYPES.CONV_GROUP) {
             if (message.payload.data.actionType === 5) {
               message.nick = message.payload.data.inviteeList ? message.payload.data.inviteeList.join(',') : message.from;
             }
@@ -152,7 +152,7 @@ Component({
             }];
             return renderDom;
           }
-          if (message.conversationType === wx.$TUIKitTIM.TYPES.CONV_C2C) {
+          if (message.conversationType === wx.TencentCloudChat.TYPES.CONV_C2C) {
             const c2cText = this.extractCallingInfoFromMessage(message);
             const renderDom = [{
               type: 'c2cCalling',

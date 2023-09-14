@@ -55,13 +55,6 @@ Component({
         groupID: this.data.groupID,
       }).then((imResponse) => { // 创建成功
         this.triggerEvent('createGroupID', { createGroupID: `GROUP${imResponse.data.group.groupID}` });
-        // 创建的群的资料
-        wx.aegis.reportEvent({
-          name: 'conversationType',
-          ext1: 'conversationType-group',
-          ext2: wx.$chat_reportType,
-          ext3: wx.$chat_SDKAppID,
-        });
       })
         .catch((imError) => {
           if (imError.code === 10021) {
@@ -87,10 +80,10 @@ Component({
   },
   ready() {
     const groupTypeList = [
-      { groupType: '品牌客户群（Work)', Type: wx.$TUIKitTIM.TYPES.GRP_WORK },
-      { groupType: 'VIP专属群（Public)', Type: wx.$TUIKitTIM.TYPES.GRP_PUBLIC },
-      { groupType: '临时会议群 (Meeting)', Type: wx.$TUIKitTIM.TYPES.GRP_MEETING },
-      { groupType: '直播群（AVChatRoom）', Type: wx.$TUIKitTIM.TYPES.GRP_CHATROOM },
+      { groupType: '品牌客户群（Work)', Type: wx.TencentCloudChat.TYPES.GRP_WORK },
+      { groupType: 'VIP专属群（Public)', Type: wx.TencentCloudChat.TYPES.GRP_PUBLIC },
+      { groupType: '临时会议群 (Meeting)', Type: wx.TencentCloudChat.TYPES.GRP_MEETING },
+      { groupType: '直播群（AVChatRoom）', Type: wx.TencentCloudChat.TYPES.GRP_CHATROOM },
     ];
     this.setData({
       groupTypeList,

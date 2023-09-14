@@ -98,7 +98,7 @@ js 文件
 <img  src="https://qcloudimg.tencent-cloud.cn/raw/b9c02ec038b4b397f175591c7b5ef876.png"/>
 
 ```javascript
-import TIM from 'tim-wx-sdk';
+import TencentCloudChat from '@tencentcloud/chat';
 import TIMUploadPlugin from 'tim-upload-plugin';
 import TIMProfanityFilterPlugin from 'tim-profanity-filter-plugin';
 import { genTestUserSig }  from '../../TUIKit/debug/GenerateTestUserSig';
@@ -115,13 +115,13 @@ Page({
 
     onLoad() {
         const userSig = genTestUserSig(this.data.config).userSig 
-        wx.$TUIKit = TIM.create({
+        wx.$TUIKit = TencentCloudChat.create({
             SDKAppID: this.data.config.SDKAPPID
         })
         wx.$chat_SDKAppID = this.data.config.SDKAPPID;
         wx.$chat_userID = this.data.config.userID;
         wx.$chat_userSig = userSig;
-        wx.$TUIKitTIM = TIM;
+        wx.TencentCloudChat = TencentCloudChat;
         wx.$TUIKit.registerPlugin({ 'tim-upload-plugin': TIMUploadPlugin });
         wx.$TUIKit.registerPlugin({ 'tim-profanity-filter-plugin': TIMProfanityFilterPlugin });
         wx.$TUIKit.login({
@@ -132,10 +132,10 @@ Page({
             key: 'currentUserID',
             data: [],
         });
-        wx.$TUIKit.on(wx.$TUIKitTIM.EVENT.SDK_READY, this.onSDKReady,this);
+        wx.$TUIKit.on(wx.TencentCloudChat.EVENT.SDK_READY, this.onSDKReady,this);
     },
     onUnload() {
-        wx.$TUIKit.off(wx.$TUIKitTIM.EVENT.SDK_READY, this.onSDKReady,this);
+        wx.$TUIKit.off(wx.TencentCloudChat.EVENT.SDK_READY, this.onSDKReady,this);
     },
     onSDKReady() {
         const TUIKit = this.selectComponent('#TUIKit');
@@ -257,18 +257,18 @@ app.js 文件
 <img  src="https://qcloudimg.tencent-cloud.cn/raw/170aa919af6db0e7b32ace5da9d417f1.png"/>
 
 ```javascript
-import TIM from 'tim-wx-sdk';
+import TencentCloudChat from '@tencentcloud/chat';
 import TIMUploadPlugin from 'tim-upload-plugin';
 import TIMProfanityFilterPlugin from 'tim-profanity-filter-plugin';
 import { genTestUserSig } from './debug/GenerateTestUserSig';
 App({
   onLaunch: function () {
-    wx.$TUIKit = TIM.create({
+    wx.$TUIKit = TencentCloudChat.create({
       SDKAppID: this.globalData.config.SDKAPPID,
     });
     const userSig = genTestUserSig(this.globalData.config).userSig 
     wx.$chat_SDKAppID = this.globalData.config.SDKAPPID;
-    wx.$TUIKitTIM = TIM;
+    wx.TencentCloudChat = TencentCloudChat;
     wx.$chat_userID = this.globalData.config.userID;
     wx.$chat_userSig = userSig;
     wx.$TUIKit.registerPlugin({ 'tim-upload-plugin': TIMUploadPlugin });
@@ -278,10 +278,10 @@ App({
       userSig
   });
     // 监听系统级事件
-    wx.$TUIKit.on(wx.$TUIKitTIM.EVENT.SDK_READY, this.onSDKReady,this);
+    wx.$TUIKit.on(wx.TencentCloudChat.EVENT.SDK_READY, this.onSDKReady,this);
   },
   onUnload() {
-    wx.$TUIKit.off(wx.$TUIKitTIM.EVENT.SDK_READY, this.onSDKReady,this);
+    wx.$TUIKit.off(wx.TencentCloudChat.EVENT.SDK_READY, this.onSDKReady,this);
   },
   globalData: {
     config: {
