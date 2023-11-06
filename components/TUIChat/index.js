@@ -182,6 +182,8 @@ Component({
       setNewInputStyle(event.detail.event.detail.height);
       this.setData({
         'viewData.style': newInputStyle,
+      },() => {
+        this.selectComponent('#MessageList').updateScrollToBottom();
       });
     },
     // 监听键盘，失去焦点时收起键盘
@@ -189,6 +191,9 @@ Component({
       this.setData({
         'viewData.style': inputStyle,
       });
+    },
+    inputHeightChange() {
+      this.selectComponent('#MessageList').updateScrollToBottom();
     },
     typing(event) {
       const { STRING_TEXT, FEAT_NATIVE_CODE } = constant;

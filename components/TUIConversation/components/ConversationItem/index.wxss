@@ -161,6 +161,9 @@
   font-size: 28rpx;
   font-family: 'PingFangSC-Regular';
   color: #999999;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 .t-conversation-box{
   height: 150rpx;

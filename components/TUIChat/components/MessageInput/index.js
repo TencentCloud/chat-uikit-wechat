@@ -59,6 +59,7 @@ Component({
     isEmoji: false,
     fileList: [],
     hasCallKit: false,
+    textareaHeight: 0,
   },
 
   lifetimes: {
@@ -234,6 +235,7 @@ Component({
       if (this.data.displayFlag === 'extension') {
         targetFlag = '';
       }
+      this.triggerEvent('inputHeightChange', {});
       this.setData({
         displayFlag: targetFlag,
       });
@@ -463,6 +465,18 @@ Component({
 
     // 监听输入框value值变化
     onInputValueChange(event) {
+      const query = wx.createSelectorQuery().in(this);
+      query.select('#textarea').boundingClientRect();
+      query.exec((res) => {
+        // 获取 textarea 组件的实际高度
+        const height = res[0].height;
+        if (this.data.textareaHeight !== height) {
+          this.triggerEvent('inputHeightChange', {});
+          this.setData({
+            textareaHeight: height,
+          })
+        }
+      });
       if (event.detail.message || event.detail.value) {
         this.setData({
           message: event.detail.message || event.detail.value,
@@ -531,6 +545,7 @@ Component({
         }, (1000 * 4));
       }
     },
+
     // 监听是否获取焦点，有焦点则向父级传值，动态改变input组件的高度。
     inputBindFocus(event) {
       this.setData({
