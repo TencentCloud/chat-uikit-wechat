@@ -1,11 +1,9 @@
 .container {
   width: 100vw;
   height: 100vh;
-  position: absolute;
-  z-index: 1;
-  top: 0;
-  left: 0;
   background-color: #F4F5F9;
+  display: flex;
+  flex-direction: column;
 }
 
 .enter {
@@ -41,7 +39,7 @@
   color: #006EFF;
 }
 .tui-navigatorbar{
-  position: absolute;
+  position: relative;
   top: 0;
   width: 750rpx;
   height: 172rpx;
@@ -88,29 +86,22 @@
   overflow: hidden;
 }
 .list-box {
-  position: absolute;
-  width: 100vw;
-  height: calc(100vh - 210px);
-  top: 172rpx;
-}
-.list-box-notips {
-  height: calc(100vh - 284px);
+  height: 0;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
 }
 .list-box-group {
     height: calc(100vh - 248px);
     top: 254rpx;  
 }
-.list-box-group-notips {
-    height: calc(100vh - 320px) !important;
-    top: 246rpx;
-}
+
 .input-area {
-  position: absolute;
-  bottom: 0;
-  }
+  position: relative;
+}
 .message-list {
-  width: 100%;
-  height: 100%;
+  flex: 1;
+  height: 0;
 }
 
 .message-input {
@@ -127,8 +118,12 @@
   right: 0;
 }
 .group-profile {
-    top: 151rpx;
-    left: 0;
-    z-index: 8;
-    position: absolute;
+  height: 60px;
+  position: relative;
+}
+.group{
+  top: 0;
+  left: 0;
+  z-index: 8;
+  position: absolute;
 }

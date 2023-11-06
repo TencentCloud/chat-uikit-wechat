@@ -89,7 +89,7 @@ Component({
     errorMessageID: '',
     typingMessage: {},
     // 是否在最底部
-    isScrollToBottom:false,
+    isScrollToBottom: true,
     chatContainerHeight:0,
     // 修改的群资料
     newGroupProfile: {}
@@ -193,6 +193,16 @@ Component({
     $onMessageReadByPeer(event) {
       this.updateReadByPeer(event);
     },
+    updateScrollToBottom() {
+      const ID = `ID-${this.filterSystemMessageID(this.data.messageList[this.data.messageList.length - 1].ID)}`;
+      this.setData({
+        jumpAim: '',
+      },() => {
+        this.setData({
+          jumpAim: ID
+        })
+      })
+    },
     // 更新已读更新
     updateReadByPeer(event) {
       event.data.forEach((item) => {
@@ -228,38 +238,6 @@ Component({
           default:
             break;
         }
-        // 判断收到的消息是否是正在输入状态消息。由于正在输入状态消息是自定义消息，需要对自定义消息进行一个过滤，是自定义消息但不是正在输入状态消息，则新消息未读数加1，不是自定义消息则新消息未读数直接加1
-        if (this.data.messageList.length > 12 && !message.isRead) {
-          try {
-            const typingMessage = JSON.parse(item.payload.data);
-            this.setData({
-              typingMessage,
-            });
-          } catch (error) {
-          }
-          if ((item.type === MESSAGE_TYPE_TEXT.TIM_CUSTOM_ELEM && this.data.typingMessage.businessID !== BUSINESS_ID_TEXT.USER_TYPING) || item.type !== MESSAGE_TYPE_TEXT.TIM_CUSTOM_ELEM) {
-            this.data.newMessageCount.push(message);
-            this.setData({
-              newMessageCount: this.data.newMessageCount,
-            });
-            // 当滚轮在最底部的时候
-            if(this.data.isScrollToBottom) {
-              // 跳转到最新的消息
-              setTimeout(() => {
-                this.handleJumpNewMessage();
-              },300)
-            } else {
-              // 不在最底部的时候弹出未读消息
-              this.setData({
-                showUnreadMessageCount: true,
-              });
-            }
-          }
-        } else {
-          this.setData({
-            showUnreadMessageCount: false,
-          });
-        }
       });
       // 若需修改消息，需将内存的消息复制一份，不能直接更改消息，防止修复内存消息，导致其他消息监听处发生消息错误
       // 将收到的消息存入messageList之前需要进行过滤，正在输入状态消息不用存入messageList.
@@ -281,10 +259,27 @@ Component({
           list.push(item);
         }
       });
+
       this.data.messageList = this.data.messageList.concat(list);
       this.setData({
         messageList: this.data.messageList,
       });
+      if (list.length > 0) {
+        // 当滚轮在最底部的时候
+        if(this.data.isScrollToBottom) {
+          // 跳转到最新的消息
+          setTimeout(() => {
+            this.handleJumpNewMessage();
+          },300)
+        } else {
+          // 不在最底部的时候弹出未读消息
+          const newMessageCount = this.data.newMessageCount.concat(list);
+          this.setData({
+            newMessageCount,
+            showUnreadMessageCount: true,
+          });
+        }
+      }
       if (this.data.conversation.type === 'GROUP') {
         const groupOperationType = this.data.messageList.slice(-1)[0].payload?.operationType || 0; 
         this.triggerEvent('changeMemberCount', {
@@ -460,6 +455,7 @@ Component({
         jumpAim: `ID-${this.filterSystemMessageID(this.data.messageList[this.data.messageList.length - 1].ID)}`,
         showUnreadMessageCount: false,
         newMessageCount: [],
+        isScrollToBottom: true,
       });
     },
     // 消息跳转到最近未读
@@ -483,6 +479,8 @@ Component({
       this.setData({
         jumpAim: `ID-${this.filterSystemMessageID(this.data.messageList[this.data.messageList.length - 1].ID)}`,
         showUnreadMessageCount: false,
+        newMessageCount: [],
+        isScrollToBottom: true,
       });
     },
     // 删除处理掉的群通知消息
@@ -637,7 +635,8 @@ Component({
     onScroll(event) {
       let isScrollToBottom = false;
       // 滚动条在底部
-      if(event.detail.scrollHeight - (event.detail.scrollTop + this.data.chatContainerHeight) <= 0) {
+      const currentScorollPos = Math.round(event.detail.scrollTop + this.data.chatContainerHeight);
+      if(event.detail.scrollHeight - currentScorollPos <= 0) {
         isScrollToBottom = true;
       }
       this.setData({

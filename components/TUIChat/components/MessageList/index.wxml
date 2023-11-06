@@ -1,5 +1,5 @@
 <view class="container" id="container">
-<scroll-view  class="message-list-container" scroll-y="true"   scroll-into-view="{{jumpAim}}" refresher-enabled="{{true}}" bindrefresherrefresh="refresh" refresher-triggered="{{triggered}}" lower-threshold="200"  bindscrolltolower="scrollHandler" bindscroll="onScroll">
+<scroll-view class="message-list-container" scroll-y="true" scroll-into-view="{{jumpAim}}"	scroll-into-view-alignment="end" refresher-enabled="{{true}}" bindrefresherrefresh="refresh" refresher-triggered="{{triggered}}" lower-threshold="200" throttle="{{false}}" bindscrolltolower="scrollHandler" bindscroll="onScroll">
     <view class="no-message" wx:if="{{isCompleted}}">没有更多啦</view>
     <view class="t-message" wx:if="{{conversation.type !== '@TIM#SYSTEM'}}" wx:for="{{messageList}}" wx:key="index"  data-index ='{{index}}'  >
          <view class="time-pop-mask" data-value="{{item.time}}" wx:if="{{showMessageTime}}">
