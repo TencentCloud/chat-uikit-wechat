@@ -24,10 +24,10 @@
                 <view class="label-pop-mask" >
                     <view class="copymessage" wx:if="{{item.type === 'TIMTextElem'|| item.type === 'TIMFaceElem'}}" catchtap="copyMessage" > <text>复制｜</text>
                     </view>
-                    <view class="deletemessage" catchtap="deleteMessage" > <text> 删除</text>
-                    </view>
+                    <view class="deletemessage" catchtap="deleteMessage" > <text> 删除</text></view>
                     <view  class="revokemessage" wx:if="{{item.flow === 'out'}}" bindtap="revokeMessage"><text> ｜撤回</text>
                     </view>
+                    <view wx:if="{{item.type === 'TIMFileElem'}}" class="download-message" catchtap="downloadMessage" > <text> ｜下载</text></view>
                 </view>
                 </view>
             </view>

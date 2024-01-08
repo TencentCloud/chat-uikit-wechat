@@ -111,11 +111,12 @@
 }
 
 .tui-conversation-lastMessage {
+  flex: 1;
+  max-height: 40rpx;
   line-height: 40rpx;
   font-size: 28rpx;
   font-family: 'PingFangSC-Regular';
   color: #999999;
-  max-width: 64vw;
   display: inline-block;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -131,8 +132,8 @@
     position: absolute;
     top: -5rpx;
     right: -25rpx;
-    width: 32rpx;
-    height: 32rpx;
+    width: 35rpx;
+    height: 35rpx;
     border-radius: 50%;
     display: flex;
     align-items: center;
@@ -150,7 +151,7 @@
     right: -20rpx;
 }
 .read-text {
-  line-height: 15px;
+  line-height: 35rpx;
   font-size: 10px;
 }
 .tui-conversation-box{
@@ -161,6 +162,14 @@
   font-size: 28rpx;
   font-family: 'PingFangSC-Regular';
   color: #999999;
+  display: flex;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.tui-conversation-name {
+  max-width: 30vw;
+  display: flex;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;

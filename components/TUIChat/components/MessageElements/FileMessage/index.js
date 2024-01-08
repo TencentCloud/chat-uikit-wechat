@@ -23,7 +23,6 @@ Component({
    * 组件的初始数据
    */
   data: {
-    Show: false,
     filePayload: {},
   },
 
@@ -31,28 +30,5 @@ Component({
    * 组件的方法列表
    */
   methods: {
-    download() {
-      this.setData({
-        Show: true,
-      });
-    },
-    downloadConfirm() {
-      wx.downloadFile({
-        url: this.data.filePayload.fileUrl,
-        success(res) {
-          const filePath = res.tempFilePath;
-          wx.openDocument({
-            filePath,
-            success() {
-            },
-          });
-        },
-      });
-    },
-    cancel() {
-      this.setData({
-        Show: false,
-      });
-    },
   },
 });

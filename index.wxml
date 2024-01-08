@@ -11,8 +11,3 @@
   hasCallKit="{{hasCallKit}}"
   bind:showConversationList="showConversationList"
   bind:handleCall="handleCall"></TUIChat>
-<TUICallKit
-  class="calling"
-  id="TUICallKit"
-  config="{{config}}"
-  bind:sendMessage="sendMessage"></TUICallKit>

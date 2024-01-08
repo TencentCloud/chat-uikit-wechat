@@ -157,6 +157,10 @@
   font-size: 14px;
   color: white;
 }
+.download-message {
+  font-size: 14px;
+  color: white;
+}
 .revokemessage{
   font-size: 14px;
   color: white; 
