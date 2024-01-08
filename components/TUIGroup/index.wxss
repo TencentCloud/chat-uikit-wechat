@@ -100,8 +100,6 @@
 }
 .nick-box{
   margin-top: 10px;
-  display: flex;
-  justify-content: center;
   align-items: center;
   font-family: PingFangSC-Regular;
   font-size: 10px;
@@ -110,7 +108,6 @@
   white-space: nowrap;
   text-overflow: ellipsis;
   overflow: hidden;
-  width: 100%;
 }
 
 .popup-mask{
@@ -288,7 +285,12 @@ flex: 1;
   border-radius: 4px;
 }
 .groupownername-box {
-  display: flex
+  display: flex;
+  max-width: 80rpx;
+  letter-spacing: 0;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
 }
 .groupownername {
      margin-top: 10px;

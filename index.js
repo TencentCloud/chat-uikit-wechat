@@ -1,5 +1,8 @@
 // TUIKitWChat/Chat/index.js
 import constant from './utils/constant';
+import TUICore, {
+  TUIConstants,
+} from '@tencentcloud/tui-core';
 const app = getApp();
 Component({
   /**
@@ -15,7 +18,7 @@ Component({
           currentConversationID: conversationID,
         });
       },
-    },  
+    },
   },
 
   /**
@@ -42,7 +45,9 @@ Component({
    */
   methods: {
     init() {
-      const { config } = this.data;
+      const {
+        config,
+      } = this.data;
       config.userID = wx.$chat_userID;
       config.userSig = wx.$chat_userSig;
       config.tim = wx.$TUIKit;
@@ -51,46 +56,45 @@ Component({
         this.currentConversationID({
           detail: {
             currentConversationID: this.data.currentConversationID,
-            unreadCount: 0
-          }
-        })
+            unreadCount: 0,
+          },
+        });
       } else {
         this.showConversationList();
       }
-      this.setData({
-        config,
-      }, () => {
-        this.initCallKit();
-      });
+      this.setData(
+        {
+          config,
+        },
+        () => {
+          this.initCallKit();
+        },
+      );
     },
     initCallKit() {
-      this.TUICallKit = this.selectComponent('#TUICallKit');
-      // 这里的 isExitInit 用来判断 TUICallKit init 方法是否存在
-      // 当 isExitInit 为 true 时，进行 callkit 初始化和日志上报
-      const isExitInit = (this.TUICallKit.init !== undefined);
-      if (this.TUICallKit !== null && isExitInit) {
-        this.TUICallKit.init();
-        wx.setStorageSync('_isTIMCallKit', true);
-        wx.$_isTIMCallKit = '_isTIMCallKit';
+      if (TUICore.getService(TUIConstants.TUICalling.SERVICE.NAME)) {
         this.setData({
           hasCallKit: true,
         });
       }
     },
     currentConversationID(event) {
-      this.setData({
-        isShowConversation: true,
-        currentConversationID: event.detail.currentConversationID,
-        unreadCount: event.detail.unreadCount,
-      }, () => {
-        const TUIChat = this.selectComponent('#TUIChat');
-        TUIChat.init();
-        const timer = setTimeout(() => {
-          const TUIConversation = this.selectComponent('#TUIConversation');
-          TUIConversation.destroy();
-          clearTimeout(timer);
-        }, 300)
-      });
+      this.setData(
+        {
+          isShowConversation: true,
+          currentConversationID: event.detail.currentConversationID,
+          unreadCount: event.detail.unreadCount,
+        },
+        () => {
+          const TUIChat = this.selectComponent('#TUIChat');
+          TUIChat.init();
+          const timer = setTimeout(() => {
+            const TUIConversation = this.selectComponent('#TUIConversation');
+            TUIConversation.destroy();
+            clearTimeout(timer);
+          }, 300);
+        },
+      );
     },
     showConversationList() {
       if (this.data.outsideConversation) {
@@ -103,15 +107,27 @@ Component({
         });
       }
     },
-    handleCall(event) {
-      if (event.detail.groupID) {
-        this.TUICallKit.groupCall(event.detail);
-      } else {
-        this.TUICallKit.call(event.detail);
+    async handleCall(event) {
+      let { userIDList = [] } = event.detail;
+      const { groupID = '', userID = '', type } = event.detail;
+      if (userID) {
+        userIDList = [userID];
       }
+      TUICore.callService({
+        serviceName: TUIConstants.TUICalling.SERVICE.NAME,
+        method: TUIConstants.TUICalling.SERVICE.METHOD.START_CALL,
+        params: {
+          groupID,
+          userIDList,
+          type,
+        },
+      });
     },
     handleBack() {
-      if (app.globalData && app.globalData.reportType !== constant.OPERATING_ENVIRONMENT) {
+      if (
+        app.globalData
+        && app.globalData.reportType !== constant.OPERATING_ENVIRONMENT
+      ) {
         wx.navigateBack({
           delta: 1,
         });
