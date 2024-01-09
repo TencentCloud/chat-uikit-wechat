@@ -394,6 +394,20 @@ Component({
           });
         });
     },
+    // 下载
+    downloadMessage() {
+      wx.downloadFile({
+        url: this.data.selectedMessage.payload.fileUrl,
+        success(res) {
+          const filePath = res.tempFilePath;
+          wx.openDocument({
+            filePath,
+            success() {
+            },
+          });
+        },
+      });
+    },
     // 撤回消息
     revokeMessage() {
       wx.$TUIKit.revokeMessage(this.data.selectedMessage)

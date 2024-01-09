@@ -18,7 +18,7 @@
     <view class="item">
         <view class="group-ID">
             <text class="aside-left">群ID</text>
-              <input class="input" type="number"  placeholder="请输入群ID" bindinput='bindGroupIDInput' placeholder-style="color:#BBBBBB;"/>
+              <input class="input" placeholder="请输入群ID" bindinput='bindGroupIDInput' placeholder-style="color:#BBBBBB;"/>
         </view>
     </view>
 
@@ -28,7 +28,7 @@
             <text class="icon">*</text>
             <text class="aside-left">群名称</text>
             </view>
-             <input class="inputname"   placeholder="请输入群名称" bindinput='bindGroupNameInput' placeholder-style="color:#BBBBBB;"/>
+             <input class="inputname" placeholder="请输入群名称" bindinput='bindGroupNameInput' placeholder-style="color:#BBBBBB;"/>
         </view>
     </view>
   </view>

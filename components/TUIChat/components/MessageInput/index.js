@@ -492,6 +492,9 @@ Component({
 
     // 发送正在输入状态消息
     sendTypingStatusMessage() {
+      if (this.data.conversation.type === wx.TencentCloudChat.TYPES.CONV_GROUP) {
+        return;
+      }
       const { BUSINESS_ID_TEXT, FEAT_NATIVE_CODE } = constant;
       // 创建正在输入状态消息, "typingStatus":1,正在输入中1,  输入结束0, "version": 1 兼容老版本,userAction:0, // 14表示正在输入,actionParam:"EIMAMSG_InputStatus_Ing" //"EIMAMSG_InputStatus_Ing" 表示正在输入, "EIMAMSG_InputStatus_End" 表示输入结束
       const typingMessage = wx.$TUIKit.createCustomMessage({
@@ -636,6 +639,9 @@ Component({
     },
     // 发送正在输入消息
     $sendTypingMessage(message) {
+      if (this.data.conversation.type === wx.TencentCloudChat.TYPES.CONV_GROUP) {
+        return;
+      }
       wx.$TUIKit.sendMessage(message, {
         onlineUserOnly: true,
       });

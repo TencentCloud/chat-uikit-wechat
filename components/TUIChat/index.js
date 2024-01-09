@@ -1,6 +1,7 @@
 // TUIKit-WChat/Chat/index.js
 import logger from '../../utils/logger';
 import constant from '../../utils/constant';
+import TUIChatServer from './server';
 // eslint-disable-next-line no-undef
 const app = getApp();
 
@@ -29,6 +30,9 @@ Component({
         this.setData({
           conversationID: currentConversationID,
         });
+        if (this.data.TUIChatServer) {
+          this.data.TUIChatServer.updateConversationID(currentConversationID);
+        }
       },
     },
     unreadCount: {
@@ -60,13 +64,18 @@ Component({
       }
     },
     ready() {
+      this.setData({
+        TUIChatServer: TUIChatServer.getInstance(this),
+      });
+      this.data.TUIChatServer.updateConversationID(this.data.conversationID);
       const query = wx.createSelectorQuery().in(this);
       query.select('.message-list').boundingClientRect((rect) => {
         this.setData({
-          chatContainerHeight: rect.height
-        })
-      }).exec();
-    }
+          chatContainerHeight: rect.height,
+        });
+      })
+        .exec();
+    },
   },
   /**
    * 组件的初始数据
@@ -96,7 +105,7 @@ Component({
     showGroupTips: false,
     showAll: false,
     chatContainerHeight: 0,
-    newGroupProfile: {}
+    newGroupProfile: {},
   },
 
   /**
@@ -179,11 +188,19 @@ Component({
     },
     // 监听键盘，获取焦点时将输入框推到键盘上方
     pullKeysBoards(event) {
-      setNewInputStyle(event.detail.event.detail.height);
+      const { height } = event.detail.event.detail;
+      if (height === 0) {
+        setNewInputStyle(25);
+      } else {
+        setNewInputStyle(height);
+      }
       this.setData({
         'viewData.style': newInputStyle,
-      },() => {
-        this.selectComponent('#MessageList').updateScrollToBottom();
+      }, () => {
+        const MessageListEle = this.selectComponent('#MessageList');
+        if (MessageListEle && MessageListEle.updateScrollToBottom) {
+          MessageListEle.updateScrollToBottom();
+        }
       });
     },
     // 监听键盘，失去焦点时收起键盘
@@ -222,16 +239,16 @@ Component({
     },
     handleNewGroupProfile(event) {
       const newGroupProfile = event.detail;
-      for(let key in newGroupProfile) {
+      for (const key in newGroupProfile) {
         // 群名称变更
-        if(key === 'groupName') {
+        if (key === 'groupName') {
           const conversationName = newGroupProfile[key];
           this.setData({
-            conversationName: conversationName
-          })
+            conversationName,
+          });
         }
       }
-    }
+    },
   },
 
 });

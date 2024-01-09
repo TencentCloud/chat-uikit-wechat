@@ -27,7 +27,8 @@
             <label class="tui-conversation-item-name">{{conversationName}}</label>
             <view class="tui-conversation-box">
                 <view class="tui-conversation-lastName" wx:if="{{conversation.type === 'GROUP'}}">
-                    <text>{{showName}}:</text>
+                    <text class="tui-conversation-name">{{showName}}</text>
+                    <text>:</text>
                 </view>
                 <view class="tui-conversation-lastMessage"
                       wx:if="{{conversation.unreadCount !== 0 && conversation.messageRemindType === 'AcceptNotNotify'}}">
