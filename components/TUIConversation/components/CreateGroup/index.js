@@ -54,7 +54,7 @@ Component({
         name: this.data.name,
         groupID: this.data.groupID,
       }).then((imResponse) => { // 创建成功
-        this.triggerEvent('createGroupID', { createGroupID: `GROUP${imResponse.data.group.groupID}` });
+        this.triggerEvent('createConversation', { currentConversationID: `GROUP${imResponse.data.group.groupID}` });
       })
         .catch((imError) => {
           if (imError.code === 10021) {

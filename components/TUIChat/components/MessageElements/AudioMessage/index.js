@@ -2,6 +2,9 @@ import { parseAudio } from '../../../../../utils/message-parse';
 
 // 创建audio控件
 const myaudio = wx.createInnerAudioContext();
+wx.setInnerAudioOption({
+  obeyMuteSwitch: false, // （仅在 iOS 生效）是否遵循静音开关，设置为 false 之后，即使是在静音模式下，也能播放声音
+});
 // eslint-disable-next-line no-undef
 Component({
   /**

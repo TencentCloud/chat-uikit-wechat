@@ -1,6 +1,6 @@
 <view class="TUI-Create-conversation-container">
   <view class="tui-navigatorbar">
-    <image class="tui-navigatorbar-back" bindtap="goBack" src="../../../../static/assets/ic_back_white.svg" />
+    <image class="tui-navigatorbar-back" bindtap="goBack" src="../../../../static/assets/back.svg" />
     <view class="conversation-title">发起会话</view>
   </view>
   <view class="tui-search-area">

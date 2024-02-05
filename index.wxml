@@ -1,8 +1,7 @@
 <!--TUIKitWChat/Chat/index.wxml-->
 <TUIConversation
   id="TUIConversation"
-  bind:currentConversationID="currentConversationID"
-  bind:currentGroupID="currentGroupID"></TUIConversation>
+  bind:createConversation="createConversation"></TUIConversation>
 <TUIChat
   id="TUIChat"
   wx:if="{{isShowConversation}}"

@@ -1,0 +1,7 @@
+{
+  "component": true,
+  "usingComponents": {
+    "Avatar": "../../components/common/Avatar",
+    "TUICustomerServicePluginWechat": "@tencentcloud/tui-customer-service-plugin-wechat/index"
+  }
+}

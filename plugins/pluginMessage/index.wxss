@@ -1,0 +1,19 @@
+.message-bubble-contaner{
+  display:flex;
+}
+.message-avatar{
+  margin-left: 20rpx;
+  margin-right: 12rpx;
+  border-radius: 10rpx;
+  width: 80rpx;
+  height: 80rpx;
+}
+.message-mine{
+  display:flex;
+  flex-direction: row-reverse;
+  align-items: center;
+}
+.message-other{
+  display:flex;
+  align-items: center;
+}

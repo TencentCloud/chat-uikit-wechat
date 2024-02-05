@@ -1,0 +1,13 @@
+<view class="TUI-Contact-container">
+  <view class="tui-navigator-bar">
+    <image class="tui-navigatorbar-back" catchtap="goBack" src="../../static/assets/back.svg" />
+    <view class="contact-title">客服号</view>
+  </view>
+  <view>
+    <view class="tui-contact-list" wx:for="{{contactList}}" wx:key="item" data-value="{{item}}" bindtap="chooseContact">
+      <Avatar class="contact-avatar" imageSrc="{{item.avatar}}"></Avatar>
+      <text class="contact-nick"> {{item.nick}} </text>
+    </view>
+  </view>
+  <ContactInfo wx:if="{{showContactInfo}}" bind:createConversation="getCurrentConversationID" bind:showContact="handleShowContact" contactInfo="{{contactInfo}}"></ContactInfo>
+</view>

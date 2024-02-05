@@ -3,6 +3,8 @@ import constant from './utils/constant';
 import TUICore, {
   TUIConstants,
 } from '@tencentcloud/tui-core';
+import TUICustomerServer from '@tencentcloud/tui-customer-service-plugin-wechat/server';
+
 const app = getApp();
 Component({
   /**
@@ -70,6 +72,7 @@ Component({
           this.initCallKit();
         },
       );
+      TUICustomerServer.getInstance();
     },
     initCallKit() {
       if (TUICore.getService(TUIConstants.TUICalling.SERVICE.NAME)) {
@@ -78,7 +81,7 @@ Component({
         });
       }
     },
-    currentConversationID(event) {
+    createConversation(event) {
       this.setData(
         {
           isShowConversation: true,

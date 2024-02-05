@@ -1,0 +1,7 @@
+{
+  "component": true,
+  "usingComponents": {
+    "ContactInfo": "./components/ContactInfo",
+    "Avatar": "../common/Avatar"
+  }
+}

@@ -1,7 +1,7 @@
 <!--TUIKit-WChat/Chat/index.wxml-->
 <view class="container enter">
    <view class="tui-navigatorbar">
-     <image class="tui-navigatorbar-back" bindtap="goBack" src="../../static/assets/ic_back_white.svg" />
+     <image class="tui-navigatorbar-back" bindtap="goBack" src="../../static/assets/back.svg" />
      <view class="conversation-title">{{conversationName}}</view>
     </view>
   <view class="group-profile" wx:if="{{isShow}}">
@@ -24,7 +24,8 @@
       id="MessageInput"
       conversation="{{conversation}}"
       hasCallKit="{{hasCallKit}}"
-      bind:sendMessage="sendMessage"
+      currentChatType="{{currentChatType}}"
+      bind:sendMessage="updateMessageList"
       bind:downKeysBoards="downKeysBoards"
       bind:pullKeysBoards="pullKeysBoards"
       bind:showMessageErrorImage="showMessageErrorImage"

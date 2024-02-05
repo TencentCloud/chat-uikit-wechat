@@ -2,6 +2,8 @@
 import logger from '../../utils/logger';
 import constant from '../../utils/constant';
 import TUIChatServer from './server';
+import TUICore, { TUIConstants } from '@tencentcloud/tui-core';
+import useChatEngine from '../../utils/useChatEngine';
 // eslint-disable-next-line no-undef
 const app = getApp();
 
@@ -30,9 +32,6 @@ Component({
         this.setData({
           conversationID: currentConversationID,
         });
-        if (this.data.TUIChatServer) {
-          this.data.TUIChatServer.updateConversationID(currentConversationID);
-        }
       },
     },
     unreadCount: {
@@ -67,7 +66,17 @@ Component({
       this.setData({
         TUIChatServer: TUIChatServer.getInstance(this),
       });
-      this.data.TUIChatServer.updateConversationID(this.data.conversationID);
+      wx.$TUIKit.getConversationProfile(this.data.conversationID).then((res) => {
+        if (this.data.TUIChatServer) {
+          this.data.TUIChatServer.updateConversation(res.data.conversation);
+        }
+        this.setChatType(res.data.conversation.type);
+        TUICore.callService({
+          serviceName: TUIConstants.TUICustomerServicePlugin.SERVICE.NAME,
+          method: TUIConstants.TUICustomerServicePlugin.SERVICE.METHOD.ACTIVE_CONVERSATION,
+          params: { conversationID: this.data.conversationID },
+        });
+      });
       const query = wx.createSelectorQuery().in(this);
       query.select('.message-list').boundingClientRect((rect) => {
         this.setData({
@@ -106,6 +115,7 @@ Component({
     showAll: false,
     chatContainerHeight: 0,
     newGroupProfile: {},
+    currentChatType: '',
   },
 
   /**
@@ -113,6 +123,7 @@ Component({
    */
   methods: {
     init() {
+      useChatEngine();
       wx.$TUIKit.setMessageRead({ conversationID: this.data.conversationID }).then(() => {
         logger.log('| TUI-chat | setMessageRead | ok');
       });
@@ -149,7 +160,12 @@ Component({
         return conversation.groupProfile.name || conversation.groupProfile.groupID;
       }
     },
-    sendMessage(event) {
+    setChatType(type) {
+      this.setData({
+        currentChatType: type,
+      });
+    },
+    updateMessageList(event) {
       // 将自己发送的消息写进消息列表里面
       this.selectComponent('#MessageList').updateMessageList(event.detail.message);
     },

@@ -1,4 +1,5 @@
-import constant from "../../utils/constant";
+import constant from '../../utils/constant';
+import useChatEngine from '../../utils/useChatEngine';
 
 // TUIKitWChat/Conversation/index.js
 const app = getApp();
@@ -12,9 +13,10 @@ Component({
     currentConversationID: '',
     showSelectTag: false,
     array: [
-      { id: 1, name: '发起会话' },
-      { id: 2, name: '发起群聊' },
-      { id: 3, name: '加入群聊' },
+      { id: 1, name: '客服号' },
+      { id: 2, name: '发起会话' },
+      { id: 3, name: '发起群聊' },
+      { id: 4, name: '加入群聊' },
     ],
     index: Number,
     unreadCount: 0,
@@ -27,11 +29,12 @@ Component({
     showCreateConversation: false,
     showCreateGroup: false,
     showJoinGroup: false,
+    showContact: false,
     handleChangeStatus: false,
     storageList: [],
     showConversation: false,
     isInit: false,
-    isExistNav: false
+    isExistNav: false,
   },
   lifetimes: {
     detached() {
@@ -39,7 +42,7 @@ Component({
       wx.$TUIKit.off(wx.TencentCloudChat.EVENT.USER_STATUS_UPDATED, this.onUserStatusUpdate, this);
       this.setData({
         isInit: false,
-      })
+      });
     },
   },
 
@@ -51,16 +54,17 @@ Component({
       this.initEvent();
       this.setData({
         showConversation: true,
-      })
+      });
       this.initUserStatus();
       this.setBackIcon();
+      useChatEngine();
     },
 
     destroy() {
       this.setData({
         showConversation: false,
         isExistNav: false,
-      })
+      });
     },
 
     initEvent() {
@@ -70,7 +74,7 @@ Component({
         this.getConversationList();
         this.setData({
           isInit: true,
-        })
+        });
       }
     },
 
@@ -95,11 +99,10 @@ Component({
     setBackIcon() {
       const pages = getCurrentPages();
       const prevPages = pages[pages.length - 2];
-      
       if (prevPages && prevPages.route) {
         this.setData({
           isExistNav: true,
-        })
+        });
       }
     },
 
@@ -120,7 +123,7 @@ Component({
       if (this.data.conversationList.length === 0) {
         wx.$TUIKit.getConversationList().then((imResponse) => {
           this.handleConversationList(imResponse.data.conversationList);
-        })
+        });
       }
     },
     handleConversationList(conversationList) {
@@ -177,7 +180,7 @@ Component({
         currentConversationID: event.currentTarget.id,
         unreadCount: this.data.conversationList[this.data.index].unreadCount,
       });
-      this.triggerEvent('currentConversationID', { currentConversationID: event.currentTarget.id,
+      this.triggerEvent('createConversation', { currentConversationID: event.currentTarget.id,
         unreadCount: this.data.conversationList[this.data.index].unreadCount });
     },
     // 展示发起会话/发起群聊/加入群聊
@@ -193,17 +196,23 @@ Component({
         switch (event.currentTarget.dataset.id) {
           case 1:
             this.setData({
-              showCreateConversation: true,
+              showContact: true,
               showConversationList: false,
             });
             break;
           case 2:
             this.setData({
-              showCreateGroup: true,
+              showCreateConversation: true,
               showConversationList: false,
             });
             break;
           case 3:
+            this.setData({
+              showCreateGroup: true,
+              showConversationList: false,
+            });
+            break;
+          case 4:
             this.setData({
               showJoinGroup: true,
               showConversationList: false,
@@ -220,22 +229,17 @@ Component({
         showSelectTag: false,
       });
     },
-    toggleConversationList() {
+    toggleConversation() {
       this.setData({
         showConversationList: true,
         showCreateConversation: false,
         showCreateGroup: false,
         showJoinGroup: false,
+        showContact: false,
       });
     },
-    searchUserID(event) {
-      this.triggerEvent('currentConversationID', { currentConversationID: event.detail.searchUserID });
-    },
-    searchGroupID(event) {
-      this.triggerEvent('currentConversationID', { currentConversationID: event.detail.searchGroupID });
-    },
-    createGroupID(event) {
-      this.triggerEvent('currentConversationID', { currentConversationID: event.detail.createGroupID });
+    handleCreateConversation(event) {
+      this.triggerEvent('createConversation', { currentConversationID: event.detail.currentConversationID });
     },
     // 处理当前登录账号是否开启在线状态
     handleChangeStatus() {

@@ -1,0 +1,12 @@
+// wxs 引入必须为相对路径
+var customerPluginTool = undefined; // 引入客服判断逻辑
+function isPluginsMessage(message) {
+  if (customerPluginTool) {
+    return customerPluginTool.isCustomerMessage(message);
+  }
+  return false;
+}
+module.exports = {
+  isPluginsMessage: isPluginsMessage,
+  customerPluginTool: customerPluginTool,
+};

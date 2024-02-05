@@ -1,0 +1,69 @@
+.TUI-ContactInfo-container {
+  width: 100vw;
+  height: 100vh;
+  background-color: #F4F5F9;
+  position: absolute;
+  top: 0;
+}
+
+.tui-navigator-bar{
+  width: 100%;
+  height: 176rpx;
+  background-color: #006EFF;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;  
+}
+
+.tui-navigatorbar-back{
+  position: absolute;
+  width: 60rpx;
+  height: 60rpx;
+  left: 24rpx;
+  bottom: 15rpx;
+}
+
+.contactinfo-title {
+  line-height: 56rpx;
+  font-size: 36rpx;
+  color: #FFFFFF;
+  text-align: center;
+  padding-top: 80rpx;
+}
+
+.contactinfo-container{
+  height: 210rpx;
+  display: flex;
+  left: 0;
+  align-items: center;
+  justify-content: flex-start;
+  box-sizing: border-box;
+  background: #FFFFFF;
+  margin: 20px 0;
+}
+
+.contactinfo-avatar{
+  width: 150rpx;
+  height: 150rpx;
+  border-radius: 14rpx;
+  margin: 10px;
+}
+.contactinfo-text{
+  font-size: 28rpx;
+  font-family: 'PingFangSC-Regular';
+  color: #999999;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+  padding-top: 6rpx;
+}
+.button-send{
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  color: #0088ff;
+  background: #FFF;
+  align-items: center;
+  height: 50px;
+}
