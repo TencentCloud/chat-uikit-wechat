@@ -171,7 +171,7 @@ Component({
           this.setData({
             messageList,
             // 消息ID前拼接字符串为了解决scroll-into-view，无法跳转以数字开头的ID。
-            jumpAim: `ID-${this.filterSystemMessageID(currentMessageList[currentMessageList.length - 1].ID)}`,
+            jumpAim: `ID-${this.filterSystemMessageID(currentMessageList[currentMessageList.length - 1]?.ID)}`,
           }, () => {
           });
         }
@@ -194,7 +194,7 @@ Component({
       this.updateReadByPeer(event);
     },
     updateScrollToBottom() {
-      const ID = `ID-${this.filterSystemMessageID(this.data.messageList[this.data.messageList.length - 1].ID)}`;
+      const ID = `ID-${this.filterSystemMessageID(this.data.messageList[this.data.messageList.length - 1]?.ID)}`;
       this.setData({
         jumpAim: '',
       },() => {
@@ -311,7 +311,7 @@ Component({
       this.setData({
         lastMessageSequence: this.data.messageList.slice(-1)[0].sequence,
         messageList: this.data.messageList,
-        jumpAim: `ID-${this.filterSystemMessageID(this.data.messageList[this.data.messageList.length - 1].ID)}`,
+        jumpAim: `ID-${this.filterSystemMessageID(this.data.messageList[this.data.messageList.length - 1]?.ID)}`,
       }, () => {
         this.setData({
           messageList: this.data.messageList,
@@ -343,6 +343,9 @@ Component({
 
     // 兼容 scrollView
     filterSystemMessageID(messageID) {
+      if (!messageID) {
+        return;
+      }
       const index = messageID.indexOf('@TIM#');
       const groupIndex = messageID.indexOf('@TGS#');
       if (index === 0) {
@@ -466,7 +469,7 @@ Component({
     // 消息跳转到最新
     handleJumpNewMessage() {
       this.setData({
-        jumpAim: `ID-${this.filterSystemMessageID(this.data.messageList[this.data.messageList.length - 1].ID)}`,
+        jumpAim: `ID-${this.filterSystemMessageID(this.data.messageList[this.data.messageList.length - 1]?.ID)}`,
         showUnreadMessageCount: false,
         newMessageCount: [],
         isScrollToBottom: true,
@@ -477,13 +480,13 @@ Component({
       if (this.data.unreadCount > 15) {
         this.getMessageList(this.data.conversation);
         this.setData({
-          jumpAim: `ID-${this.filterSystemMessageID(this.data.messageList[this.data.messageList.length - this.data.unreadCount].ID)}`,
+          jumpAim: `ID-${this.filterSystemMessageID(this.data.messageList[this.data.messageList.length - this.data.unreadCount]?.ID)}`,
           showUpJump: false,
         });
       } else {
         this.getMessageList(this.data.conversation);
         this.setData({
-          jumpAim: `ID-${this.filterSystemMessageID(this.data.messageList[this.data.messageList.length - this.data.unreadCount].ID)}`,
+          jumpAim: `ID-${this.filterSystemMessageID(this.data.messageList[this.data.messageList.length - this.data.unreadCount]?.ID)}`,
           showUpJump: false,
         });
       }
@@ -491,7 +494,7 @@ Component({
     // 滑动到最底部置跳转事件为false
     scrollHandler() {
       this.setData({
-        jumpAim: `ID-${this.filterSystemMessageID(this.data.messageList[this.data.messageList.length - 1].ID)}`,
+        jumpAim: `ID-${this.filterSystemMessageID(this.data.messageList[this.data.messageList.length - 1]?.ID)}`,
         showUnreadMessageCount: false,
         newMessageCount: [],
         isScrollToBottom: true,
@@ -656,7 +659,7 @@ Component({
       this.setData({
         isScrollToBottom
       })
-    }
+    },
   },
 
 });

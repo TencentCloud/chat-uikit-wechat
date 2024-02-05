@@ -1,43 +1,75 @@
 import TUICore, { TUIConstants } from '@tencentcloud/tui-core';
-
 export default class TUIChatServer {
   static instance;
-  currentConversationID = '';
+  currentConversation = {};
+  TUIChat = undefined;
 
-  constructor(TUIChat) {
+  constructor() {
     // register service
     TUICore.registerService(TUIConstants.TUIChat.SERVICE.NAME, this);
-    this.TUIChat = TUIChat;
   }
 
   static getInstance(TUIChat) {
     if (!TUIChatServer.instance) {
-      TUIChatServer.instance = new TUIChatServer(TUIChat);
+      TUIChatServer.instance = new TUIChatServer();
     }
+    TUIChatServer.instance.updateChat(TUIChat);
     return TUIChatServer.instance;
   }
 
-  updateConversationID(conversationID) {
-    this.currentConversationID = conversationID;
+  updateChat(chat) {
+    this.TUIChat = chat;
+  }
+
+  updateConversation(conversation) {
+    this.currentConversation = conversation;
   }
 
   onCall(method, params = {}, callback) {
-    if (method === TUIConstants.TUIChat.SERVICE.METHOD.UPDATE_MESSAGE_LIST) {
-      const { message } = params;
-      // 两种上屏情况
-      // 1. 如果 call 消息 conversationID 为 currentConversation,
-      //    需要借助 UPDATE_MESSAGE_LIST 更新 engine 中 TUIStore 的 messageList 进行上屏
-      //    （因为此时无法获得自己发送的消息）
-      // 2. 如果 call 消息 conversationID 不是 currentConversation,
-      //    下次切换到 call 消息所在会话时， getMessageList 可以获得 所有自己发送的 call 消息
-      //    无需此处处理
-      if (message?.conversationID === this.currentConversationID) {
-        this.TUIChat.sendMessage({
+    let customMessage;
+    let textMessage;
+    const currentMessage = {
+      to: this.currentConversation.conversationID.replace(this.currentConversation.type, ''),
+      conversationType: this.currentConversation.type,
+      payload: params?.payload,
+    };
+    switch (method) {
+      case TUIConstants.TUIChat.SERVICE.METHOD.UPDATE_MESSAGE_LIST:
+        if (params?.message?.conversationID === this.currentConversation.conversationID) {
+          this.TUIChat.updateMessageList({
+            detail: {
+              message: params.message,
+            },
+          });
+        }
+        break;
+      case TUIConstants.TUIChat.SERVICE.METHOD.SEND_CUSTOM_MESSAGE:
+        customMessage = wx.$TUIKit.createCustomMessage(currentMessage);
+        this.TUIChat.updateMessageList({
           detail: {
-            message,
+            message: customMessage,
           },
         });
-      }
+        wx.$TUIKit.sendMessage(customMessage).then((res) => {
+          callback && callback(res);
+        });
+        break;
+      case TUIConstants.TUIChat.SERVICE.METHOD.SEND_TEXT_MESSAGE:
+        textMessage = wx.$TUIKit.createTextMessage(currentMessage);
+        this.TUIChat.updateMessageList({
+          detail: {
+            message: textMessage,
+          },
+        });
+        wx.$TUIKit.sendMessage(textMessage).then((res) => {
+          callback && callback(res);
+        });
+        break;
+      case TUIConstants.TUIChat.SERVICE.METHOD.SET_CHAT_TYPE:
+        this.TUIChat.setChatType(params?.chatType);
+        break;
+      default:
+        break;
     }
   }
 }

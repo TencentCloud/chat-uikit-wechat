@@ -1,0 +1,43 @@
+.TUI-Contact-container {
+  width: 100vw;
+  height: 100vh;
+  background-color: #F4F5F9;
+}
+.tui-navigator-bar{
+  width: 100%;
+  height: 176rpx;
+  background-color: #006EFF;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;                       
+}
+.tui-navigatorbar-back{
+   position: absolute;
+   width: 60rpx;
+   height: 60rpx;
+   left: 24rpx;
+   bottom: 15rpx;
+}
+.contact-title {
+   line-height: 56rpx;
+   font-size: 36rpx;
+   color: #FFFFFF;
+   text-align: center;
+   padding-top: 80rpx;
+}
+.tui-contact-list{
+   height: 150rpx;
+   display: flex;
+   left: 0;
+   align-items: center;
+   justify-content: flex-start;
+   box-sizing: border-box;
+   border-bottom: 2rpx solid #EEF0F3;
+}
+.contact-avatar{
+   width: 96rpx;
+   height: 96rpx;
+   margin: 0 16rpx;
+   border-radius: 14rpx;
+}

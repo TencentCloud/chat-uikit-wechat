@@ -23,13 +23,15 @@
   color: white;
 }
 .icon-right{
-  float: right;
+  display: inline-block;
   width: 32rpx;
   height: 32rpx;
-  padding-top: 10rpx;
-  padding-left: 4rpx;
 }
-.showdetail{
+.show-more {
+  display: flex;
+  align-items: flex-end;
+}
+.show-detail{
   display:flex;
   width: 100vw;
   height: 200rpx;
@@ -45,11 +47,11 @@
   justify-content: center;
   align-items: center;
 }
-.left-box{
+.last-box {
+  flex: 1;
   display: flex;
-  padding-left: 200rpx;
-  padding-top: 10rpx;
-  width: 250rpx;
+  justify-content: flex-end;
+  padding-right: 35rpx;
 }
 .box-group{
   position: absolute;

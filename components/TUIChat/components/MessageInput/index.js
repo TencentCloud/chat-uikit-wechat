@@ -24,6 +24,18 @@ Component({
         });
       },
     },
+    currentChatType: {
+      type: String,
+      value: '',
+      observer(currentChatType) {
+        const { CONVERSATION_TYPE } = constant;
+        if (currentChatType === CONVERSATION_TYPE.CUSTOMER_SERVICE) {
+          this.setData({
+            showCallExtension: false,
+          });
+        }
+      },
+    },
   },
 
   /**
@@ -60,6 +72,7 @@ Component({
     fileList: [],
     hasCallKit: false,
     textareaHeight: 0,
+    showCallExtension: true,
   },
 
   lifetimes: {
@@ -136,7 +149,7 @@ Component({
           if (isRecord === false) {
             const title = '麦克风权限授权';
             const content = '发送语音消息，需要在设置中对麦克风进行授权允许';
-            wx.authorize({ 
+            wx.authorize({
               scope: 'scope.record',
               success: () => {
                 this.recorderStart();
@@ -148,7 +161,7 @@ Component({
                   text: '按住说话',
                   isRecording: false,
                 });
-              }
+              },
             });
           } else {
             this.recorderStart();
@@ -396,7 +409,7 @@ Component({
         },
       });
     },
-    
+
     handleShowModal(title, content) {
       wx.showModal({
         title,
@@ -469,12 +482,12 @@ Component({
       query.select('#textarea').boundingClientRect();
       query.exec((res) => {
         // 获取 textarea 组件的实际高度
-        const height = res[0].height;
+        const { height } = res[0];
         if (this.data.textareaHeight !== height) {
           this.triggerEvent('inputHeightChange', {});
           this.setData({
             textareaHeight: height,
-          })
+          });
         }
       });
       if (event.detail.message || event.detail.value) {
@@ -656,12 +669,12 @@ Component({
           disablePush: true,
         },
       }).catch((error) => {
-          logger.log(`| TUI-chat | message-input | sendMessageError: ${error.code} `);
-          this.triggerEvent('showMessageErrorImage', {
-            showErrorImageFlag: error.code,
-            message,
-          });
+        logger.log(`| TUI-chat | message-input | sendMessageError: ${error.code} `);
+        this.triggerEvent('showMessageErrorImage', {
+          showErrorImageFlag: error.code,
+          message,
         });
+      });
       this.setData({
         displayFlag: '',
       });

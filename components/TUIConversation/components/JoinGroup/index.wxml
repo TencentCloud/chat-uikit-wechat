@@ -1,7 +1,7 @@
 <!--miniprogram/pages/TUI-Group/join-group/join.wxml-->
 <view class="TUI-Create-conversation-container">
   <view class="tui-navigatorbar">
-    <image class="tui-navigatorbar-back" bindtap="goBack" src="../../../../static/assets/ic_back_white.svg" />
+    <image class="tui-navigatorbar-back" bindtap="goBack" src="../../../../static/assets/back.svg" />
     <view class="conversation-title">加入群聊</view>
   </view>
   <view class="tui-search-area">

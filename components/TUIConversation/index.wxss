@@ -7,7 +7,7 @@
 .tui-navigatorbar{
   position: absolute;
   top: 0;
-  width: 750rpx;
+  width: 100%;
   height: 170rpx;
   background-color: #006EFF;
 }
@@ -89,12 +89,10 @@
   color: #006EFF;
 }
 .conversation-bubble {
-  padding-top: 40rpx;
   position: absolute;
   width: 300rpx;
   padding-right: 3px;
   background-color: #FFFFFF;
-  height: 320rpx;
   bottom: 300rpx;
   left: 220rpx;
   z-index: 100;

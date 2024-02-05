@@ -12,6 +12,7 @@
     "FaceMessage": "../MessageElements/FaceMessage/index",
     "FileMessage": "../MessageElements/FileMessage/index",
     "MergerMessage": "../MessageElements/MergerMessage/index",
-    "RevokeMessage": "../MessageElements/RevokeMessage/index"
+    "RevokeMessage": "../MessageElements/RevokeMessage/index",
+    "PluginMessage": "../../../../plugins/pluginMessage/index"
   }
 }

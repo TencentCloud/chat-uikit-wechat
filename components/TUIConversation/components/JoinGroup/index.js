@@ -68,7 +68,7 @@ Component({
                 icon: 'none',
               });
             } else {
-              this.triggerEvent('searchGroupID', { searchGroupID: `GROUP${this.data.searchGroup.groupID}` });
+              this.triggerEvent('createConversation', { currentConversationID: `GROUP${this.data.searchGroup.groupID}` });
             }
           } else {
             wx.showToast({

@@ -1,0 +1,25 @@
+<view class="TUI-ContactInfo-container">
+  <view class="tui-navigator-bar">
+    <image class="tui-navigatorbar-back" catchtap="goBack" src="../../../static/assets/back.svg" />
+    <view class="contactinfo-title">客服号</view>
+  </view>
+  <view>
+    <view class="contactinfo-container">
+      <Avatar class="contactinfo-avatar" imageSrc="{{contactInfo.avatar}}"></Avatar>
+      <view>
+        <text>{{contactInfo.nick}}</text>
+        <view class="contactinfo-text">
+          <text>ID:</text>
+          <text>{{contactInfo.userID}}</text>
+        </view>
+        <view class="contactinfo-text">
+        <text>个性签名:</text>
+        <text>{{contactInfo.selfSignature}}</text>
+        </view>
+      </view>
+    </view>
+    <view class="button-send" bindtap="createConversation">
+      <text>发送消息</text>
+    </view>
+  </view>
+</view>

@@ -1,6 +1,6 @@
 {
   "name": "@tencentcloud/chat-uikit-wechat",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "description": "TUIKit 是基于 IM SDK 实现的一套 UI 组件，其包含会话、聊天、群组、个人资料等功能，基于 TUIKit 组件您可以像搭积木一样快速搭建起自己的业务逻辑。",
   "main": "index.js",
   "directories": {
@@ -29,9 +29,11 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "tim-upload-plugin": "latest",
-    "tim-profanity-filter-plugin": "latest",
     "@tencentcloud/chat": "latest",
-    "@tencentcloud/tui-core": "latest"
+    "@tencentcloud/chat-uikit-engine": "latest",
+    "@tencentcloud/tui-core": "latest",
+    "tim-profanity-filter-plugin": "latest",
+    "tim-upload-plugin": "latest",
+    "@tencentcloud/tui-customer-service-plugin-wechat": "latest"
   }
 }

@@ -156,3 +156,6 @@
     {transform: translate(0,0);
     }
 }
+.TUI-Call-Extension-container{
+    display:flex
+}

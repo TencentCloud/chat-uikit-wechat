@@ -48,7 +48,10 @@ const constant = {
     NOT_GROUP_MEMBER: '您已不在此群组中！'
   },
 
-  OPERATING_ENVIRONMENT: 'imWxTuikit'
+  OPERATING_ENVIRONMENT: 'imWxTuikit',
+  CONVERSATION_TYPE: {
+    CUSTOMER_SERVICE: 'customerService'
+  }
 };
 
 

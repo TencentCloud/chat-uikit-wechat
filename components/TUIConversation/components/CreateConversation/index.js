@@ -55,7 +55,7 @@ Component({
     // 确认邀请
     bindConfirmInvite() {
       if (this.data.searchUser.isChoose) {
-        this.triggerEvent('searchUserID', { searchUserID: `C2C${this.data.searchUser.userID}` });
+        this.triggerEvent('createConversation', { currentConversationID: `C2C${this.data.searchUser.userID}` });
       } else {
         wx.showToast({
           title: '请选择相关用户',
