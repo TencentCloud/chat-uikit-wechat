@@ -55,7 +55,7 @@ Component({
       config.tim = wx.$TUIKit;
       config.SDKAppID = wx.$chat_SDKAppID;
       if (this.data.outsideConversation) {
-        this.currentConversationID({
+        this.createConversation({
           detail: {
             currentConversationID: this.data.currentConversationID,
             unreadCount: 0,
