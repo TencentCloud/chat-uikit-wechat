@@ -1,7 +1,9 @@
 <view class="message-bubble-contaner">
   <view wx:if="{{pluginTool.customerPluginTool && pluginTool.customerPluginTool.isCustomerMessage(message)}}" class="{{message.flow === 'out'? 'message-mine' : 'message-other'}}">
     <Avatar wx:if="{{pluginTool.customerPluginTool && !pluginTool.customerPluginTool.isMessageInvisible(message)}}" class="message-avatar" imageSrc="{{message.avatar}}"></Avatar>
-    <TUICustomerServicePluginWechat message="{{message}}" isMine="{{message.flow === 'out'}}"></TUICustomerServicePluginWechat>
+    <view class="message-contain">
+      <TUICustomerServicePluginWechat message="{{message}}" isMine="{{message.flow === 'out'}}"></TUICustomerServicePluginWechat>
+    </view>
   </view>
 </view>
 <wxs src="../pluginTool.wxs" module="pluginTool"></wxs>
