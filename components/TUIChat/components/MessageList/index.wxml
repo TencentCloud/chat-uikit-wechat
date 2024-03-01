@@ -7,7 +7,6 @@
     scroll-into-view-alignment="end"
     refresher-enabled="{{true}}"
     bindrefresherrefresh="refresh"
-    refresher-triggered="{{triggered}}"
     lower-threshold="200"
     throttle="{{false}}"
     bindscrolltolower="scrollHandler"
