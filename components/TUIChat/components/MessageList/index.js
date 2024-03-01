@@ -29,7 +29,7 @@ Component({
         });
       },
     },
-    chatContainerHeight:{
+    chatContainerHeight: {
       type: Number,
       value: '',
       observer(newVal) {
@@ -37,7 +37,7 @@ Component({
           chatContainerHeight: newVal,
         });
       },
-    }
+    },
   },
 
   /**
@@ -90,9 +90,9 @@ Component({
     typingMessage: {},
     // 是否在最底部
     isScrollToBottom: true,
-    chatContainerHeight:0,
+    chatContainerHeight: 0,
     // 修改的群资料
-    newGroupProfile: {}
+    newGroupProfile: {},
   },
 
   lifetimes: {
@@ -128,18 +128,9 @@ Component({
     // 刷新消息列表
     refresh() {
       if (this.data.isCompleted) {
-        this.setData({
-          isCompleted: true,
-          triggered: false,
-        });
         return;
       }
       this.getMessageList(this.data.conversation);
-      setTimeout(() => {
-        this.setData({
-          triggered: false,
-        });
-      }, 2000);
     },
     // 获取消息列表
     getMessageList(conversation) {
@@ -153,29 +144,32 @@ Component({
           const { messageList } = res.data; // 消息列表。
           this.data.nextReqMessageID = res.data.nextReqMessageID; // 用于续拉，分页续拉时需传入该字段。
           this.data.isCompleted = res.data.isCompleted; // 表示是否已经拉完所有消息。
-          this.data.messageList = [...messageList, ...this.data.messageList];
           if (messageList.length > 0 && this.data.messageList.length < this.data.unreadCount) {
             this.getMessageList(conversation);
           }
-          this.$handleMessageRender(this.data.messageList, messageList);
+          this.$handleMessageRender(messageList);
         });
       }
     },
     // 历史消息渲染
-    $handleMessageRender(messageList, currentMessageList) {
-      this.showHistoryMessageTime(currentMessageList);
-      if (messageList.length > 0) {
-        if (this.data.conversation.type === '@TIM#SYSTEM') {
-          this.filterRepateSystemMessage(messageList);
-        } else {
-          this.setData({
-            messageList,
-            // 消息ID前拼接字符串为了解决scroll-into-view，无法跳转以数字开头的ID。
-            jumpAim: `ID-${this.filterSystemMessageID(currentMessageList[currentMessageList.length - 1]?.ID)}`,
-          }, () => {
-          });
-        }
+    $handleMessageRender(historyMessageList = []) {
+      if (historyMessageList.length === 0) {
+        return;
       }
+      this.showHistoryMessageTime(historyMessageList);
+      const messageList = [...historyMessageList, ...this.data.messageList];
+      const lastHistoryMessageID = historyMessageList[historyMessageList.length - 1].ID;
+      if (this.data.conversation.type === '@TIM#SYSTEM') {
+        return this.filterRepateSystemMessage(messageList);
+      }
+      this.setData({
+        messageList,
+      }, () => {
+        this.setData({
+          // 消息ID前拼接字符串为了解决 scroll-into-view，无法跳转以数字开头的 ID。
+          jumpAim: `ID-${this.filterSystemMessageID(lastHistoryMessageID)}`,
+        });
+      });
     },
     // 系统消息去重
     filterRepateSystemMessage(messageList) {
@@ -197,11 +191,11 @@ Component({
       const ID = `ID-${this.filterSystemMessageID(this.data.messageList[this.data.messageList.length - 1]?.ID)}`;
       this.setData({
         jumpAim: '',
-      },() => {
+      }, () => {
         this.setData({
-          jumpAim: ID
-        })
-      })
+          jumpAim: ID,
+        });
+      });
     },
     // 更新已读更新
     updateReadByPeer(event) {
@@ -226,7 +220,7 @@ Component({
         UseData: value,
       });
       value.data.forEach((item) => {
-        switch(item.type) {
+        switch (item.type) {
           // 群提示消息
           case 'TIMGroupTipElem':
             this.handleGroupTipMessage(item);
@@ -266,11 +260,11 @@ Component({
       });
       if (list.length > 0) {
         // 当滚轮在最底部的时候
-        if(this.data.isScrollToBottom) {
+        if (this.data.isScrollToBottom) {
           // 跳转到最新的消息
           setTimeout(() => {
             this.handleJumpNewMessage();
-          },300)
+          }, 300);
         } else {
           // 不在最底部的时候弹出未读消息
           const newMessageCount = this.data.newMessageCount.concat(list);
@@ -281,9 +275,9 @@ Component({
         }
       }
       if (this.data.conversation.type === 'GROUP') {
-        const groupOperationType = this.data.messageList.slice(-1)[0].payload?.operationType || 0; 
+        const groupOperationType = this.data.messageList.slice(-1)[0].payload?.operationType || 0;
         this.triggerEvent('changeMemberCount', {
-          groupOperationType
+          groupOperationType,
         });
       }
     },
@@ -321,18 +315,18 @@ Component({
 
     handleGroupTipMessage(msg) {
       // 群资料改变
-      if(msg.payload.operationType === 6) {
-        const newGroupProfile = msg.payload.newGroupProfile;
+      if (msg.payload.operationType === 6) {
+        const { newGroupProfile } = msg.payload;
         this.setData({
-          newGroupProfile: newGroupProfile
+          newGroupProfile,
         });
-        this.triggerEvent('handleNewGroupProfile',this.data.newGroupProfile);
+        this.triggerEvent('handleNewGroupProfile', this.data.newGroupProfile);
       }
     },
 
     handleGroupSystemNoticeMessage(msg) {
       // 被群主踢出群组
-      if(msg.payload.operationType === 4) {
+      if (msg.payload.operationType === 4) {
         // 跳转到聊天列表页面
         wx.navigateTo({
           url: '../../../../../../TUI-CustomerService/pages/index',
@@ -653,12 +647,12 @@ Component({
       let isScrollToBottom = false;
       // 滚动条在底部
       const currentScorollPos = Math.round(event.detail.scrollTop + this.data.chatContainerHeight);
-      if(event.detail.scrollHeight - currentScorollPos <= 0) {
+      if (event.detail.scrollHeight - currentScorollPos <= 0) {
         isScrollToBottom = true;
       }
       this.setData({
-        isScrollToBottom
-      })
+        isScrollToBottom,
+      });
     },
   },
 
