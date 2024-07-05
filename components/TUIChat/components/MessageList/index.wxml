@@ -7,26 +7,15 @@
     scroll-into-view-alignment="end"
     refresher-enabled="{{true}}"
     bindrefresherrefresh="refresh"
-    refresher-triggered="{{triggered}}"
     lower-threshold="200"
     throttle="{{false}}"
     bindscrolltolower="scrollHandler"
     bindscroll="onScroll">
     <view class="no-message" wx:if="{{isCompleted}}">没有更多啦</view>
     <view class="t-message" wx:if="{{conversation.type !== '@TIM#SYSTEM'}}" wx:for="{{messageList}}" wx:key="index"  data-index ='{{index}}'  >
-         <view class="time-pop-mask" data-value="{{item.time}}" wx:if="{{showMessageTime}}">
-             <view class="showmessagetime" wx:if="{{item.isShowTime}}">
-             <text class="time"  wx:if="{{!item.isDeleted && !item.isRevoked}}">{{messageTime}} </text> 
-             </view>
-         </view>
-          <view class="time-pop-mask" data-value="{{item.time}}" wx:if="{{showMessageHistoryTime}}">
-             <view class="showmessagetime" wx:if="{{item.isShowHistoryTime && !item.isShowTime && !item.isShowMoreHistoryTime}}">
-             <text class="time"  wx:if="{{!item.isDeleted && !item.isRevoked}}">{{messageHistoryTime}} </text> 
-             </view>
-         </view>
-         <view class="time-pop-mask"   wx:if="{{item.isShowMoreHistoryTime}}">
+         <view class="time-pop-mask" data-value="{{item.time}}" wx:if="{{item.isShowHistoryTime && !item.isDeleted && !item.isRevoked}}">
              <view class="showmessagetime">
-             <text class="time">{{newArr[item.ID]}} </text> 
+                <text class="time">{{item.historyTime}} </text> 
              </view>
          </view>
     <RevokeMessage wx:if="{{item.isRevoked}}" message="{{item}}" isMine="{{item.flow === 'out'}}" bind:resendMessage="resendMessage"/>
@@ -95,4 +84,3 @@
 </view>
 <wxs src="concat.wxs" module="concat"/>
 <wxs src="../../../../plugins/pluginTool.wxs" module="pluginTool"></wxs>
-

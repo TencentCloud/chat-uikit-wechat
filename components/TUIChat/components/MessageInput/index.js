@@ -564,12 +564,15 @@ Component({
 
     // 监听是否获取焦点，有焦点则向父级传值，动态改变input组件的高度。
     inputBindFocus(event) {
+      const inputEvent = event;
+      // 兼容(webview 渲染模式正常) skyline 渲染模式下，键盘高度失效，event.detail.height = 0;
+      inputEvent.detail.height = inputEvent.detail.height > 0 ? inputEvent.detail.height : 350;
       this.setData({
         focus: true,
       });
       this.getMessageList(this.data.conversation);
       this.triggerEvent('pullKeysBoards', {
-        event,
+        event: inputEvent,
       });
       // 有焦点则关闭除键盘之外的操作界面，例如表情组件。
       this.handleClose();
