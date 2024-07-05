@@ -2,6 +2,7 @@
 
 腾讯云即时通信（Instant Messaging，IM）基于 QQ 底层 IM 能力开发，仅需植入 SDK 即可轻松集成聊天、会话、群组、资料管理能力，帮助您实现文字、图片、短语音、短视频等富媒体消息收发，全面满足通信需要。
 
+
 ## 关于 chat-uikit-wechat
 
 chat-uikit-wechat 是基于腾讯云 IM SDK 的一款 小程序 UI 组件库，它提供了一些通用的 UI 组件，包含会话、聊天、群组、音视频通话等功能。基于 UI 组件您可以像搭积木一样快速搭建起自己的业务逻辑。
@@ -9,6 +10,9 @@ chat-uikit-wechat 中的组件在实现 UI 功能的同时，会调用 IM SDK �
 chat-uikit-wechat 效果如下图所示：
 <img width="1015" src="https://user-images.githubusercontent.com/40623255/202661227-d4227dcc-bada-42a6-a57b-0d0c0abc098b.png" />
 
+> 为尊重表情设计版权，TUIKit 工程中不包含大表情元素切图，正式上线商用前请您替换为自己设计或拥有版权的其他表情包。默认的QQ表情版权归腾讯所有且不支持授权，请您谅解并知悉。
+>
+> 点击👉: [提交工单](https://console.cloud.tencent.com/workorder/category?level1_id=29&level2_id=40&source=14&data_title=%E5%8D%B3%E6%97%B6%E9%80%9A%E4%BF%A1%20IM&step=1)
 
 ## 发送您的第一条消息
 

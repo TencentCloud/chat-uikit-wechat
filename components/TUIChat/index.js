@@ -235,10 +235,11 @@ Component({
           this.setData({
             conversationName: STRING_TEXT.TYPETYPING,
           });
-          setTimeout(() => {
+          const timer = setTimeout(() => {
             this.setData({
               conversationName: this.getConversationName(this.data.conversation),
             });
+            clearTimeout(timer);
           }, (1000 * 30));
         } else if (event.detail.typingMessage.typingStatus === FEAT_NATIVE_CODE.NOTTYPING_STATUS && event.detail.typingMessage.actionParam === constant.TYPE_INPUT_STATUS_END) {
           this.setData({
