@@ -88,6 +88,8 @@ Component({
     chatContainerHeight: 0,
     // 修改的群资料
     newGroupProfile: {},
+    refreshStatus: false,
+    selfMessageMap: {},
   },
 
   lifetimes: {
@@ -122,10 +124,20 @@ Component({
   methods: {
     // 刷新消息列表
     refresh() {
-      if (this.data.isCompleted) {
-        return;
-      }
-      this.getMessageList(this.data.conversation);
+      this.setData({
+        refreshStatus: true,
+      }, () => {
+        if (this.data.isCompleted) {
+          this.setData({
+            refreshStatus: false,
+          })
+          return;
+        }
+        this.getMessageList(this.data.conversation);
+        this.setData({
+          refreshStatus: false,
+        })
+      })
     },
     // 获取消息列表
     getMessageList(conversation) {
@@ -137,8 +149,10 @@ Component({
         }).then((res) => {
           this.showMoreHistoryMessageTime(res.data.messageList);
           const { messageList } = res.data; // 消息列表。
-          this.data.nextReqMessageID = res.data.nextReqMessageID; // 用于续拉，分页续拉时需传入该字段。
-          this.data.isCompleted = res.data.isCompleted; // 表示是否已经拉完所有消息。
+          this.setData({
+            nextReqMessageID: res.data.nextReqMessageID, // 用于续拉，分页续拉时需传入该字段。
+            isCompleted: res.data.isCompleted, // 表示是否已经拉完所有消息。
+          })
           if (messageList.length > 0 && this.data.messageList.length < this.data.unreadCount) {
             this.getMessageList(conversation);
           }
@@ -279,6 +293,15 @@ Component({
     // 自己的消息上屏
     updateMessageList(message) {
       if (message.conversationID !== this.data.conversation.conversationID) return;
+      const index = this.data.messageList.findIndex((item) => item.ID === message.ID)
+      if (index > -1) {
+        this.data.selfMessageMap[message.ID] = message;
+        this.setData({
+          selfMessageMap: this.data.selfMessageMap
+        })
+        return;
+      }
+
       wx.$TUIKit.setMessageRead({ conversationID: this.data.conversation.conversationID }).then(() => {
         logger.log('| MessageList | setMessageRead | ok');
       });
