@@ -671,6 +671,10 @@ Component({
         offlinePushInfo: {
           disablePush: true,
         },
+      }).then((res) => {
+        this.triggerEvent('sendMessage', {
+          message: res.data.message,
+        });
       }).catch((error) => {
         logger.log(`| TUI-chat | message-input | sendMessageError: ${error.code} `);
         this.triggerEvent('showMessageErrorImage', {
