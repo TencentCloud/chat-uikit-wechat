@@ -12,7 +12,7 @@
     throttle="{{false}}"
     bindscrolltolower="scrollHandler"
     bindscroll="onScroll">
-    <view class="no-message" wx:if="{{isCompleted}}">没有更多啦</view>
+    <view class="no-message" wx:if="{{isCompleted}}">没有更多啦</view>   
     <view class="t-message" wx:if="{{conversation.type !== '@TIM#SYSTEM'}}" wx:for="{{messageList}}" wx:key="index"  data-index ='{{index}}'  >
          <view class="time-pop-mask" data-value="{{item.time}}" wx:if="{{item.isShowHistoryTime && !item.isDeleted && !item.isRevoked}}">
              <view class="showmessagetime">
@@ -35,12 +35,12 @@
       <TipMessage  wx:if="{{item.type === 'TIMGroupTipElem'}}" message="{{item}}"/>
       <view  wx:if="{{item.type !== 'TIMGroupTipElem'}}"   class="{{item.flow === 'out' ? 't-self-message':'t-recieve-message'}}" >
           <image class="t-message-avatar" wx:if="{{item.flow === 'in'}}" src="{{item.avatar || 'https://web.sdk.qcloud.com/component/TUIKit/assets/avatar_21.png'}}" data-value="{{item}}" bindtap="getMemberProfile" />
-          <view class="read-receipts" wx:if="{{conversation.type === 'C2C' && item.flow==='out' &&  (item.status === 'success' || selfMessageMap[item.ID].status)}}">
+          <view class="read-receipts" wx:if="{{conversation.type === 'C2C' && item.flow==='out' &&  item.status === 'success'}}">
             <view wx:if="{{item.isPeerRead}}" >已读</view>
             <view wx:else>未读</view>
           </view>
-          <view wx:if="{{item.flow === 'out' && item.ID === errorMessageID || item.status === 'fail'}}" class="t-message-error-box">
-            <image class="t-message-error" src='../../../../static/images/tuikit-msg-error.png' bindtap="ResendMessage" />
+          <view wx:if="{{item.flow === 'out' && item.status === 'fail'}}" class="t-message-error-box">   
+            <image class="t-message-error" src='../../../../static/images/tuikit-msg-error.png' data-value="{{item.ID}}" bindtap="ResendMessage" />
           </view>
           <view  class="{{item.flow === 'out' ? 't-self-message-body':'t-recieve-message-body'}}"  catch:longpress="handleLongPress" data-index='{{index}}'  data-value='{{item}}' id="{{concat.concat(conversation.type,'ID-',item.ID)}}" message-value="{{item}}" >
             <TextMessage wx:if="{{item.type === 'TIMTextElem'}}" message="{{item}}" isMine="{{item.flow === 'out'}}" />
