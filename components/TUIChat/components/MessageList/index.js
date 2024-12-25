@@ -80,8 +80,6 @@ Component({
     isRewrite: false,
     isMessageTime: {},
     newArr: {},
-    errorMessage: {},
-    errorMessageID: '',
     typingMessage: {},
     // 是否在最底部
     isScrollToBottom: true,
@@ -89,7 +87,6 @@ Component({
     // 修改的群资料
     newGroupProfile: {},
     refreshStatus: false,
-    selfMessageMap: {},
   },
 
   lifetimes: {
@@ -295,9 +292,9 @@ Component({
       if (message.conversationID !== this.data.conversation.conversationID) return;
       const index = this.data.messageList.findIndex((item) => item.ID === message.ID)
       if (index > -1) {
-        this.data.selfMessageMap[message.ID] = message;
+        this.data.messageList[index] = message;
         this.setData({
-          selfMessageMap: this.data.selfMessageMap
+          messageList: this.data.messageList,
         })
         return;
       }
@@ -306,7 +303,6 @@ Component({
         logger.log('| MessageList | setMessageRead | ok');
       });
       const { BUSINESS_ID_TEXT, MESSAGE_TYPE_TEXT } = constant;
-      // this.$onMessageReadByPeer();
       this.messageTimeForShow(message);
       if (message.type === MESSAGE_TYPE_TEXT.TIM_CUSTOM_ELEM) {
         const typingMessage = JSON.parse(message.payload.data);
@@ -562,15 +558,13 @@ Component({
     },
     // 消息发送失败
     sendMessageError(event) {
-      this.setData({
-        errorMessage: event.detail.message,
-        errorMessageID: event.detail.message.ID,
-      });
+      this.updateMessageList(event.detail.message);
       const errorCode = event.detail.showErrorImageFlag;
       this.handleErrorCode(errorCode);
     },
     // 消息发送失败后重新发送
-    ResendMessage() {
+    ResendMessage(event) {
+      const ID = event.target.dataset.value;
       const { TOAST_TITLE_TEXT } = constant;
       wx.showModal({
         content: '确认重发该消息？',
@@ -578,8 +572,10 @@ Component({
           if (!res.confirm) {
             return;
           }
-          wx.$TUIKit.resendMessage(this.data.errorMessage) // 传入需要重发的消息实例
-            .then(() => {
+          const failMessage = this.data.messageList.find(item => (item.ID === ID));
+          wx.$TUIKit.resendMessage(failMessage) // 传入需要重发的消息实例
+            .then((res) => {
+              this.updateMessageList(res.data.message);
               this.showToast(TOAST_TITLE_TEXT.RESEND_SUCCESS);
               this.setData({
                 showMessageError: false,
